@@ -24,7 +24,8 @@ class DatabaseSeeder extends Seeder
         // $this->call(BappenasTableSeeder::class);
         // $this->call(KlTableSeeder::class);
         // $this->call(DinasTableSeeder::class);
-        $this->call(KegiatansTableSeeder::class);
+        // $this->call(KegiatansTableSeeder::class);
+        $this->call(UsulansTableSeeder::class);
 
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }

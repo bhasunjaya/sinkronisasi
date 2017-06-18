@@ -9,13 +9,40 @@
 - Akun User
 
 
-    
 
 
 
 
+Kab. Batanghari  => Kab. Batang Hari
+Kab. Batubara   => Kab. Batu bara
+Kab. Biak-Numfor    => Kab. Biak Numfor
+Kab. Kutai Kertanegara => Kab. Kutai Kartanegara
+Kab. Labuhan Batu Selatan   => Kab. Labuhanbatu Selatan
+Kab. Labuhan Batu Utara => Kab. Labuhanbatu Utara
+Kab. Muko-Muko  => Kab. Mukomuko
+Kab. Musi Banyu Asin => Kab. Musi Banyuasin
+Kab. Pakpak Barat => Kab. Pakpak Bharat
+Kab. Pulau Buru => Kab. Buru
+Kab. Tanatoraja => Kab. Tana Toraja
+Kab. Tojo Una-Una => Kab. Tojo Una Una
+Kota Bukittinggi => Kota Bukit Tinggi
+Kota Gunung Sitoli => Kota Gunungsitoli
+Kota Kotamobago => Kota Kotamobagu
+Kota Pangkalpinang => Kota Pangkal Pinang
+Kota Pematangsiantar => Kota Pematang Siantar
+Kota Tanjungbalai   => Kota Tanjung Balai
+Kota Tanjungpinang  => Kota Tanjung Pinang
+Kota Tebingtinggi => Kota Tebing Tinggi
+Provinsi  Sulawesi Barat => Provinsi Sulawesi Barat
+Provinsi Bangka Belitung =? Provinsi  Bangka Belitung
+
+Provinsi Bengkulu   => Provinsi  Bengkulu
+Provinsi Lampung => Provinsi  Lampung
 
 
+
+SELECT
+FROM rawdatas WHERE rawdata.name NOT IN (SELECT nama FROM )
 
 ```
 php artisan make:view path.to.your.view -e path.to.parent.view
@@ -60,4 +87,43 @@ IGNORE 1 LINES;
             'Content-Type' => 'text/csv',
         );
         return response()->file($filename, $headers);
+```
+
+### Fix the dirty rawdata
+```
+$fix = [
+            'Kab. Kulonprogo' => 'Kab. Kulon Progo',
+            'Kab. Gunungkidul' => 'Kab. Gunung Kidul',
+            'Kab. DeliSerdang' => 'Kab. Deli Serdang',
+            'Kab. Batanghari' => 'Kab. Batang Hari',
+            'Kab. Batubara' => 'Kab. Batu bara',
+            'Kab. Biak-Numfor' => 'Kab. Biak Numfor',
+            'Kab. Kutai Kertanegara' => 'Kab. Kutai Kartanegara',
+            'Kab. Labuhan Batu Selatan' => 'Kab. Labuhanbatu Selatan',
+            'Kab. Labuhan Batu Utara' => 'Kab. Labuhanbatu Utara',
+            'Kab. Muko-Muko' => 'Kab. Mukomuko',
+            'Kab. Musi Banyu Asin' => 'Kab. Musi Banyuasin',
+            'Kab. Pakpak Barat' => 'Kab. Pakpak Bharat',
+            'Kab. Tanatoraja' => 'Kab. Tana Toraja',
+            'Kab. Tojo Una-Una' => 'Kab. Tojo Una Una',
+            'Kota Bukittinggi' => 'Kota Bukit Tinggi',
+            'Kab. Pulau Buru' => 'Kab. Buru',
+            'Kota Gunung Sitoli' => 'Kota Gunungsitoli',
+            'Kota Kotamobago' => 'Kota Kotamobagu',
+            'Kota Pangkalpinang' => 'Kota Pangkal Pinang',
+            'Kota Pematangsiantar' => 'Kota Pematang Siantar',
+            'Kota Tanjungbalai' => 'Kota Tanjung Balai',
+            'Kota Tanjungpinang' => 'Kota Tanjung Pinang',
+            'Kota Tebingtinggi' => 'Kota Tebing Tinggi',
+            'Provinsi  Sulawesi Barat' => 'Provinsi Sulawesi Barat',
+            'Provinsi Bangka Belitung' => 'Provinsi  Bangka Belitung',
+            'Provinsi Bengkulu' => 'Provinsi  Bengkulu',
+            'Provinsi Lampung' => 'Provinsi  Lampung',
+        ];
+        foreach ($fix as $k => $v) {
+            DB::table('rawdatas')
+                ->where('nama', $k)
+                ->update(['nama' => $v]);
+
+        }
 ```
