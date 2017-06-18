@@ -1,17 +1,15 @@
+## Map
+- Master Data
+    - Pemda
+    - Bidang dan Sub
+    - Bappenas
+    - K/L Teknis
+    - Dinas
+
+- Akun User
 
 
-Migrasikan dulu
-
-- USER
-- RAWDATA
-- PEMDA
-- BIDANG
-- SUBBIDANG
-- BAPPENAS
-- KL
-- DINAS
-
-
+    
 
 
 
