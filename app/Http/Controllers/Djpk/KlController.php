@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Djpk;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Kl;
+use Illuminate\Http\Request;
 
 class KlController extends Controller
 {
@@ -14,7 +15,9 @@ class KlController extends Controller
      */
     public function index()
     {
-        //
+        $kls = Kl::orderBy('nama', 'asc')->get();
+        return view('djpk.kl.index', compact('kls'));
+
     }
 
     /**
@@ -24,7 +27,7 @@ class KlController extends Controller
      */
     public function create()
     {
-        //
+        return view('djpk.kl.create');
     }
 
     /**
@@ -35,7 +38,17 @@ class KlController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'nama' => 'required',
+        ], [
+            'nama.required' => 'Nama Harus Diisi',
+        ]);
+
+        $kl = new Kl;
+        $kl->nama = $request->nama;
+        $kl->save();
+
+        return redirect('djpk/kl')->withStatus('Data K/L sukses bertambah');
     }
 
     /**
@@ -44,7 +57,7 @@ class KlController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Kl $kl)
     {
         //
     }
@@ -55,9 +68,9 @@ class KlController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Kl $kl)
     {
-        //
+        return view('djpk.kl.edit', compact('kl'));
     }
 
     /**
@@ -67,9 +80,18 @@ class KlController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Kl $kl)
     {
-        //
+        $this->validate($request, [
+            'nama' => 'required',
+        ], [
+            'nama.required' => 'Nama Harus Diisi',
+        ]);
+
+        $kl->nama = $request->nama;
+        $kl->save();
+
+        return redirect('djpk/kl')->withStatus('Data K/L sukses terupdate');
     }
 
     /**
@@ -78,8 +100,9 @@ class KlController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Kl $kl)
     {
-        //
+        $kl->delete();
+        return $kl->id;
     }
 }
