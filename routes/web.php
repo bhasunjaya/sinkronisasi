@@ -28,3 +28,7 @@ Route::group(['prefix' => 'djpk', 'namespace' => 'Djpk'], function () {
     Route::resource('pemda', 'PemdaController');
     Route::resource('document', 'DocumentController');
 });
+
+Route::group(['prefix' => 'pemda', 'namespace' => 'Pemda'], function () {
+    Route::get('usulan', 'UsulanController@index');
+});
