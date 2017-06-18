@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Djpk;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Pemda;
+use Illuminate\Http\Request;
 
 class PemdaController extends Controller
 {
@@ -14,7 +15,8 @@ class PemdaController extends Controller
      */
     public function index()
     {
-        //
+        $pemdas = Pemda::all();
+        return view('djpk.pemda.index', compact('pemdas'));
     }
 
     /**
@@ -24,7 +26,7 @@ class PemdaController extends Controller
      */
     public function create()
     {
-        //
+        return view('djpk.pemda.create');
     }
 
     /**
@@ -35,7 +37,27 @@ class PemdaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'prov' => 'required',
+            'kab' => 'required',
+            'nama' => 'required',
+            'idpemda' => 'required|numeric',
+        ], [
+            'prov.required' => 'Kode Provinsi Harus Diisi',
+            'kab.required' => 'Kode Kab/Kota Harus Diisi',
+            'nama.required' => 'Nama Harus Diisi',
+            'idpemda.required' => 'ID Pemda Harus Diisi',
+            'idpemda.numeric' => 'ID Pemda Harus Angka',
+        ]);
+
+        $pemda = new Pemda;
+        $pemda->prov = $request->prov;
+        $pemda->kab = $request->kab;
+        $pemda->nama = $request->nama;
+        $pemda->idpemda = $request->idpemda;
+        $pemda->save();
+
+        return redirect('djpk/pemda')->withStatus('Data Pemda sukses bertambah');
     }
 
     /**
@@ -44,7 +66,7 @@ class PemdaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Pemda $pemda)
     {
         //
     }
@@ -55,9 +77,9 @@ class PemdaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Pemda $pemda)
     {
-        //
+        return view('djpk.pemda.edit', compact('pemda'));
     }
 
     /**
@@ -67,9 +89,28 @@ class PemdaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Pemda $pemda)
     {
-        //
+        $this->validate($request, [
+            'prov' => 'required',
+            'kab' => 'required',
+            'nama' => 'required',
+            'idpemda' => 'required|numeric',
+        ], [
+            'prov.required' => 'Kode Provinsi Harus Diisi',
+            'kab.required' => 'Kode Kab/Kota Harus Diisi',
+            'nama.required' => 'Nama Harus Diisi',
+            'idpemda.required' => 'ID Pemda Harus Diisi',
+            'idpemda.numeric' => 'ID Pemda Harus Angka',
+        ]);
+
+        $pemda->prov = $request->prov;
+        $pemda->kab = $request->kab;
+        $pemda->nama = $request->nama;
+        $pemda->idpemda = $request->idpemda;
+        $pemda->save();
+
+        return redirect('djpk/pemda')->withStatus('Data Pemda sukses diubah');
     }
 
     /**
@@ -78,8 +119,9 @@ class PemdaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Pemda $pemda)
     {
-        //
+        $pemda->delete();
+        return $pemda->id;
     }
 }
