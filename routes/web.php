@@ -26,4 +26,5 @@ Route::group(['prefix' => 'djpk', 'namespace' => 'Djpk'], function () {
     Route::resource('dinas', 'DinasController');
     Route::resource('kl', 'KlController');
     Route::resource('pemda', 'PemdaController');
+    Route::resource('document', 'DocumentController');
 });

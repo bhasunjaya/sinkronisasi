@@ -89,6 +89,10 @@
                             <a href="{{url('/djpk/user')}}">User Account</a>
                             <span class="icon-thumbnail">u</span>
                         </li>
+                        <li class="">
+                            <a href="{{url('/djpk/document')}}">Upload Excell</a>
+                            <span class="icon-thumbnail">u</span>
+                        </li>
                     </ul>
                 </li>
                 <li class="">
