@@ -21,6 +21,7 @@ Route::get('/', function () {
 Route::group(['prefix' => 'djpk', 'namespace' => 'Djpk'], function () {
     Route::resource('bappenas', 'BappenasController');
     Route::resource('bidang', 'BidangController');
+    Route::resource('subbidang', 'SubbidangController');
     Route::resource('dinas', 'DinasController');
     Route::resource('kl', 'KlController');
     Route::resource('pemda', 'PemdaController');

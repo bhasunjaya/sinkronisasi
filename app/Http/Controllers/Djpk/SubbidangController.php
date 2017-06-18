@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Djpk;
 
-use App\Bidang;
 use App\Http\Controllers\Controller;
+use App\Subbidang;
 use Illuminate\Http\Request;
 
-class BidangController extends Controller
+class SubbidangController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,8 @@ class BidangController extends Controller
      */
     public function index()
     {
-        $bidangs = Bidang::orderBy('nama')->get();
-        return view('djpk.bidang.index', compact('bidangs'));
+        $subbidangs = Subbidang::with('bidang')->orderBy('id')->get();
+        return view('djpk.subbidang.index', compact('subbidangs'));
     }
 
     /**
@@ -26,7 +26,7 @@ class BidangController extends Controller
      */
     public function create()
     {
-        return view('djpk.bidang.create');
+        return view('djpk.subbidang.create');
     }
 
     /**
@@ -37,17 +37,21 @@ class BidangController extends Controller
      */
     public function store(Request $request)
     {
+
         $this->validate($request, [
+            'bidang_id' => 'required',
             'nama' => 'required',
         ], [
+            'bidang_id.required' => 'Bidang Harus Diisi',
             'nama.required' => 'Nama Harus Diisi',
         ]);
 
-        $bidang = new Bidang;
-        $bidang->nama = $request->nama;
-        $bidang->save();
+        $subbidang = new Subbidang;
+        $subbidang->bidang_id = $request->bidang_id;
+        $subbidang->nama = $request->nama;
+        $subbidang->save();
 
-        return redirect('djpk/bidang')->withStatus('Data Bidang sukses bertambah');
+        return redirect('djpk/subbidang')->withStatus('Data Sub bidang sukses bertambah');
     }
 
     /**
@@ -56,7 +60,7 @@ class BidangController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Bidang $bidang)
+    public function show($id)
     {
         //
     }
@@ -67,10 +71,9 @@ class BidangController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Bidang $bidang)
+    public function edit(Subbidang $subbidang)
     {
-
-        return view('djpk.bidang.edit', compact('bidang'));
+        return view('djpk.subbidang.edit', compact('subbidang'));
     }
 
     /**
@@ -80,18 +83,21 @@ class BidangController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Bidang $bidang)
+    public function update(Request $request, Subbidang $subbidang)
     {
         $this->validate($request, [
+            'bidang_id' => 'required',
             'nama' => 'required',
         ], [
             'nama.required' => 'Nama Harus Diisi',
+            'bidang_id.required' => 'Nama Harus Diisi',
         ]);
 
-        $bidang->nama = $request->nama;
-        $bidang->save();
+        $subbidang->bidang_id = $request->nama;
+        $subbidang->nama = $request->nama;
+        $subbidang->save();
 
-        return redirect('djpk/bidang')->withStatus('Data bidang sukses terupdate');
+        return redirect('djpk/subbidang')->withStatus('Data subbidang sukses terupdate');
     }
 
     /**
@@ -100,9 +106,9 @@ class BidangController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Bidang $bidang)
+    public function destroy(Subbidang $subbidang)
     {
-        $bidang->delete();
-        return $bidang->id;
+        $subbidang->delete();
+        return $subbidang->id;
     }
 }

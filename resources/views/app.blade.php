@@ -63,7 +63,11 @@
                     <ul class="sub-menu">
                         <li class="">
                             <a href="{{url('/djpk/bidang')}}">Bidang DAK</a>
-                            <span class="icon-thumbnail">dak</span>
+                            <span class="icon-thumbnail">b</span>
+                        </li>
+                        <li class="">
+                            <a href="{{url('/djpk/subbidang')}}">Sub Bidang</a>
+                            <span class="icon-thumbnail">sb</span>
                         </li>
                         <li class="">
                             <a href="{{url('/djpk/pemda')}}">Pemda</a>
