@@ -19,21 +19,12 @@ class DatabaseSeeder extends Seeder
 
         // ]);
 
-        $this->call(PemdasTableSeeder::class);
-        $this->call(BidangsTableSeeder::class);
-        $this->call(BappenasTableSeeder::class);
-        $this->call(KlTableSeeder::class);
-        $this->call(DinasTableSeeder::class);
-
+        // $this->call(PemdasTableSeeder::class);
+        // $this->call(BidangsTableSeeder::class);
         // $this->call(BappenasTableSeeder::class);
         // $this->call(KlTableSeeder::class);
         // $this->call(DinasTableSeeder::class);
-        //
-        // $this->call(UsersTableSeeder::class);
-        // $this->call(RawdatasTableSeeder::class);
-        // $this->call(BidangsTableSeeder::class);
-        // $this->call(AbidangsTableSeeder::class);
-        //$this->call(AsubbidangsTableSeeder::class);
+        $this->call(KegiatansTableSeeder::class);
 
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }

@@ -44,3 +44,20 @@ FIELDS TERMINATED BY ',' ENCLOSED BY '"'
 LINES TERMINATED BY '\r\n'
 IGNORE 1 LINES;
 ```
+
+```
+        $raws = Rawdata::groupBy('bidang', 'subbidang', 'kegiatan')
+            ->select('bidang', 'subbidang', 'kegiatan')
+            ->get();
+        $filename = "kegiatan.csv";
+        $handle = fopen($filename, 'w+');
+        fputcsv($handle, array('bidang', 'subbidang', 'kegiatan'));
+        foreach ($raws as $row) {
+            fputcsv($handle, array($row->bidang, $row->subbidang, $row->kegiatan));
+        }
+        fclose($handle);
+        $headers = array(
+            'Content-Type' => 'text/csv',
+        );
+        return response()->file($filename, $headers);
+```
