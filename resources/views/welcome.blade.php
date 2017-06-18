@@ -50,40 +50,41 @@
                     </a>
                     <span class="bg-success icon-thumbnail"><i class="pg-home"></i></span>
                 </li>
+                <li>
+                    <a href="javascript:;"  class="detailed">
+                        <span class="title">Master Data</span>
+                        <span class="details">inisialisasi</span>
+                    </a>
+                    <span class="icon-thumbnail">M</span>
+                    <ul class="sub-menu">
+                        <li class="">
+                            <a href="{{url('/')}}">Bidang DAK</a>
+                            <span class="icon-thumbnail">dak</span>
+                        </li>
+                        <li class="">
+                            <a href="{{url('/')}}">Pemda</a>
+                            <span class="icon-thumbnail">p</span>
+                        </li>
+                        <li class="">
+                            <a href="{{url('/')}}">Bappenas</a>
+                            <span class="icon-thumbnail">b</span>
+                        </li>
+                        <li class="">
+                            <a href="{{url('/')}}">K/L Teknis</a>
+                            <span class="icon-thumbnail">kl</span>
+                        </li>
+                        <li class="">
+                            <a href="{{url('/')}}">Dinas</a>
+                            <span class="icon-thumbnail">kl</span>
+                        </li>
+                    </ul>
+                </li>
                 <li class="">
                     <a href="{{url('djpk/user')}}" class="detailed">
                         <span class="title">Users</span>
                         <span class="details">database</span>
                     </a>
                     <span class="icon-thumbnail"><i class="fa fa-users"></i></span>
-                </li>
-                <li class="">
-                    <a href=" " class="detailed">
-                        <span class="title">Data Master</span>
-                        <span class="details">inisialisasi</span>
-                    </a>
-                    <span class="icon-thumbnail">W</span>
-                </li>
-                <li class="">
-                    <a href="email.html" class="detailed">
-                        <span class="title">Email</span>
-                        <span class="details">234 New Emails</span>
-                    </a>
-                    <span class="icon-thumbnail"><i class="pg-mail"></i></span>
-                </li>
-                <li>
-                    <a href="javascript:;"><span class="title">Calendar</span><span class=" arrow"></span></a>
-                    <span class="icon-thumbnail"><i class="pg-calender"></i></span>
-                    <ul class="sub-menu">
-                        <li class="">
-                            <a href="calendar.html">Basic</a>
-                            <span class="icon-thumbnail">c</span>
-                        </li>
-                        <li class="">
-                            <a href="calendar_lang.html">Languages</a>
-                            <span class="icon-thumbnail">L</span>
-                        </li>
-                    </ul>
                 </li>
             </ul>
             <div class="clearfix"></div>
