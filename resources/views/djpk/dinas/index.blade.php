@@ -19,7 +19,7 @@
 <!-- end style -->
 
 @section('pagetitle')
-<h1>Data Master Bappenas</h1> @endsection
+<h1>Data Master Dinas</h1> @endsection
 <!-- end pagetitle -->
 
 @section('content')
@@ -31,9 +31,9 @@
     @endif
     <div class="panel panel-transparent">
         <div class="panel-heading">
-            <div class="panel-title">Semua data bappenas</div>
+            <div class="panel-title">Semua data dinas</div>
             <div class="btn-group pull-right m-b-10">
-                <a href="{{url('djpk/bappenas/create')}}" class="btn btn-primary">Tambah Data</a>
+                <a href="{{url('djpk/dinas/create')}}" class="btn btn-primary">Tambah Data</a>
             </div>
             <div class="clearfix"></div>
         </div>
@@ -47,12 +47,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($bappenas as $row)
+                        @foreach($dinas as $row)
                         <tr id="data-row-{{$row->id}}">
                             <td class="v-align-middle">{{$row->nama}}</td>
                             <td class="v-align-middle">
-                                <a href="{{url('djpk/bappenas/'.$row->id.'/edit')}}" class="btn btn-primary btn-xs">edit</a>
-                                <button class="btn btn-danger btn-xs btn-del" data-url="{{url('djpk/bappenas/'.$row->id)}}">delete</button>
+                                <a href="{{url('djpk/dinas/'.$row->id.'/edit')}}" class="btn btn-primary btn-xs">edit</a>
+                                <button class="btn btn-danger btn-xs btn-del" data-url="{{url('djpk/dinas/'.$row->id)}}">delete</button>
                             </td>
                         </tr>
                         @endforeach

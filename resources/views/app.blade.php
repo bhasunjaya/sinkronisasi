@@ -62,23 +62,23 @@
                     <span class="icon-thumbnail">M</span>
                     <ul class="sub-menu">
                         <li class="">
-                            <a href="{{url('/')}}">Bidang DAK</a>
+                            <a href="{{url('/djpk/bidang')}}">Bidang DAK</a>
                             <span class="icon-thumbnail">dak</span>
                         </li>
                         <li class="">
-                            <a href="{{url('/')}}">Pemda</a>
+                            <a href="{{url('/djpk/pemda')}}">Pemda</a>
                             <span class="icon-thumbnail">p</span>
                         </li>
                         <li class="">
-                            <a href="{{url('/')}}">Bappenas</a>
+                            <a href="{{url('/djpk/bappenas')}}">Bappenas</a>
                             <span class="icon-thumbnail">b</span>
                         </li>
                         <li class="">
-                            <a href="{{url('/')}}">K/L Teknis</a>
+                            <a href="{{url('/djpk/kl')}}">K/L Teknis</a>
                             <span class="icon-thumbnail">kl</span>
                         </li>
                         <li class="">
-                            <a href="{{url('/')}}">Dinas</a>
+                            <a href="{{url('/djpk/dinas')}}">Dinas</a>
                             <span class="icon-thumbnail">kl</span>
                         </li>
                     </ul>

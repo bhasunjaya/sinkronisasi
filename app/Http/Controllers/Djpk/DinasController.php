@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Djpk;
 
-use Illuminate\Http\Request;
+use App\Dinas;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class DinasController extends Controller
 {
@@ -14,7 +15,8 @@ class DinasController extends Controller
      */
     public function index()
     {
-        //
+        $dinas = Dinas::all();
+        return view('djpk.dinas.index', compact('dinas'));
     }
 
     /**
@@ -24,7 +26,8 @@ class DinasController extends Controller
      */
     public function create()
     {
-        //
+
+        return view('djpk.dinas.create');
     }
 
     /**
@@ -35,7 +38,17 @@ class DinasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'nama' => 'required',
+        ], [
+            'nama.required' => 'Nama Harus Diisi',
+        ]);
+
+        $dina = new Dinas;
+        $dina->nama = $request->nama;
+        $dina->save();
+
+        return redirect('djpk/dinas')->withStatus('Data Dinas sukses bertambah');
     }
 
     /**
@@ -44,7 +57,7 @@ class DinasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Dinas $dina)
     {
         //
     }
@@ -55,9 +68,9 @@ class DinasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Dinas $dina)
     {
-        //
+        return view('djpk.dinas.edit', compact('dina'));
     }
 
     /**
@@ -67,9 +80,19 @@ class DinasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Dinas $dina)
     {
-        //
+
+        $this->validate($request, [
+            'nama' => 'required',
+        ], [
+            'nama.required' => 'Nama Harus Diisi',
+        ]);
+
+        $dina->nama = $request->nama;
+        $dina->save();
+
+        return redirect('djpk/dinas')->withStatus('Data Dinas sukses terupdate');
     }
 
     /**
@@ -78,8 +101,9 @@ class DinasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Dinas $dina)
     {
-        //
+        $dina->delete();
+        return $dina->id;
     }
 }

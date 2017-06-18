@@ -101,6 +101,7 @@ class BappenasController extends Controller
      */
     public function destroy(Bappenas $bappena)
     {
+        $bappena->delete();
         return $bappena->id;
     }
 }
