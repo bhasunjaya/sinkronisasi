@@ -19,6 +19,7 @@
 
 ```
 php artisan make:view path.to.your.view -e path.to.parent.view
+php artisan make:view djpk.bappenas. -e app
 
 $select_stmt = DB::getPdo()->prepare('SELECT id FROM products WHERE sku = ?');
 $insert_stmt = DB::getPdo()->prepare('INSERT INTO products(price, old_price) VALUES(?, ?)');

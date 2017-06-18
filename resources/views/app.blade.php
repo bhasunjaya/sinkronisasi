@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     {{-- http://pages.revox.io/dashboard/latest/html/widget.html --}}
 
@@ -18,13 +19,16 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta content="" name="description" />
     <meta content="" name="author" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <link href="{{asset('b3/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
     <link class="main-stylesheet" href="{{asset('b3/css/jquery.scrollbar.css')}}" rel="stylesheet" type="text/css" />
     <link href="{{asset('b3/css/font-awesome.min.css')}}" rel="stylesheet" type="text/css" /> {{--
     <link href="assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen" /> --}} {{--
     <link href="assets/plugins/switchery/css/switchery.min.css" rel="stylesheet" type="text/css" media="screen" /> --}}
     <link href="{{asset('b3/css/pages-icons.css')}}" rel="stylesheet" type="text/css">
-    <link class="main-stylesheet" href="{{asset('b3/css/pages.css')}}" rel="stylesheet" type="text/css" />
+    <link class="main-stylesheet" href="{{asset('b3/css/pages.css')}}" rel="stylesheet" type="text/css" /> @stack('styles')
+
     <!--[if lte IE 9]>
     <link href="assets/plugins/codrops-dialogFx/dialog.ie.css" rel="stylesheet" type="text/css" media="screen" />
     <![endif]-->
@@ -51,7 +55,7 @@
                     <span class="bg-success icon-thumbnail"><i class="pg-home"></i></span>
                 </li>
                 <li>
-                    <a href="javascript:;"  class="detailed">
+                    <a href="javascript:;" class="detailed">
                         <span class="title">Master Data</span>
                         <span class="details">inisialisasi</span>
                     </a>
@@ -156,17 +160,12 @@
                 <div class="jumbotron" data-pages="parallax">
                     <div class="container-fluid container-fixed-lg sm-p-l-20 sm-p-r-20">
                         <div class="inner">
-                            <ul class="breadcrumb">
-                                <li>
-                                    <p>Pages</p>
-                                </li>
-                                <li><a href="#" class="active">Blank template</a>
-                                </li>
-                            </ul>
+                            <h1>@yield('pagetitle')</h1>
                         </div>
                     </div>
                 </div>
                 <div class="container-fluid container-fixed-lg">
+                    @yield('content')
                 </div>
             </div>
             <div class="container-fluid container-fixed-lg footer">
@@ -181,6 +180,27 @@
                         <a href="#">Hand-crafted</a> <span class="hint-text">&amp; Made with Love ®</span>
                     </p>
                     <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade slide-up disable-scroll" id="modalSlideUp" tabindex="-1" role="dialog" aria-labelledby="modalSlideUpLabel" aria-hidden="false">
+        <div class="modal-dialog ">
+            <div class="modal-content-wrapper">
+                <div class="modal-content">
+                    <div class="modal-header clearfix">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <i class="pg-close fs-14"></i>
+                        </button>
+                        <h5>Apakah anda Yakin?</h5>
+                        <p> Proses ini tidak dapat diulang</p>
+                    </div>
+                    <div class="modal-body  text-center">
+                        <button type="button" class="btn btn-primary" data-url="" id="confirm-yes">YA</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">batal</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -205,7 +225,8 @@
     <script src="assets/plugins/switchery/js/switchery.min.js" type="text/javascript"></script> --}}
     <script src="{{asset('b3/js/pages.min.js')}}" type="text/javascript"></script>
     <script src="{{asset('b3/js/scripts.js')}}" type="text/javascript"></script>
-    {{--
+
+    @stack('scripts') {{--
     <script src="assets/js/demo.js" type="text/javascript"></script> --}}
 </body>
 

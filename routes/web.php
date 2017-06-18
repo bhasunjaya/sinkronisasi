@@ -9,8 +9,19 @@
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+ */
 
 Route::get('/', function () {
-    return view('welcome');
+    return 'goto djpk';
+});
+
+/**
+ * DJPK ROUTE
+ */
+Route::group(['prefix' => 'djpk', 'namespace' => 'Djpk'], function () {
+    Route::resource('bappenas', 'BappenasController');
+    Route::resource('bidang', 'BidangController');
+    Route::resource('dinas', 'DinasController');
+    Route::resource('kl', 'KlController');
+    Route::resource('pemda', 'PemdaController');
 });
