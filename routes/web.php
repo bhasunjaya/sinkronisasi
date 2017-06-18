@@ -19,6 +19,7 @@ Route::get('/', function () {
  * DJPK ROUTE
  */
 Route::group(['prefix' => 'djpk', 'namespace' => 'Djpk'], function () {
+    Route::resource('user', 'UserController');
     Route::resource('bappenas', 'BappenasController');
     Route::resource('bidang', 'BidangController');
     Route::resource('subbidang', 'SubbidangController');

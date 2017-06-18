@@ -54,10 +54,10 @@
                     </a>
                     <span class="bg-success icon-thumbnail"><i class="pg-home"></i></span>
                 </li>
-                <li>
+                <li class="{{prefixActive('/djpk')}}">
                     <a href="javascript:;" class="detailed">
-                        <span class="title">Master Data</span>
-                        <span class="details">inisialisasi</span>
+                        <span class="title">DJPK</span>
+                        <span class="details">admin</span>
                     </a>
                     <span class="icon-thumbnail">M</span>
                     <ul class="sub-menu">
@@ -85,12 +85,21 @@
                             <a href="{{url('/djpk/dinas')}}">Dinas</a>
                             <span class="icon-thumbnail">kl</span>
                         </li>
+                        <li class="">
+                            <a href="{{url('/djpk/user')}}">User Account</a>
+                            <span class="icon-thumbnail">u</span>
+                        </li>
                     </ul>
                 </li>
                 <li class="">
                     <a href="{{url('djpk/user')}}" class="detailed">
-                        <span class="title">Users</span>
-                        <span class="details">database</span>
+                        <span class="title">ASDASD</span>
+                        <span class="details">
+                            {{-- {{ Route::currentRouteName() }} --}}
+                            {{ prefixActive('/djpk')}}
+                            {{-- {{ Route::currentRouteAction() }} --}}
+                            {{-- {{ Route::current() }} --}}
+                        </span>
                     </a>
                     <span class="icon-thumbnail"><i class="fa fa-users"></i></span>
                 </li>
