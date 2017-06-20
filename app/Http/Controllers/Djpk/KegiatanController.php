@@ -16,8 +16,7 @@ class KegiatanController extends Controller
     public function index()
     {
 
-        $kegiatans = Kegiatan::with('bidang', 'subbidang')
-            ->orderBy('bidang.id,subbidang.id')
+        $kegiatans = Kegiatan::with('subbidang.bidang')
             ->get();
         return $kegiatans;
     }

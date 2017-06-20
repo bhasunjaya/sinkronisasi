@@ -96,14 +96,9 @@
                     </ul>
                 </li>
                 <li class="">
-                    <a href="{{url('djpk/user')}}" class="detailed">
-                        <span class="title">ASDASD</span>
-                        <span class="details">
-                            {{-- {{ Route::currentRouteName() }} --}}
-                            {{ prefixActive('/djpk')}}
-                            {{-- {{ Route::currentRouteAction() }} --}}
-                            {{-- {{ Route::current() }} --}}
-                        </span>
+                    <a href="{{url('pemda/usulan')}}" class="detailed">
+                        <span class="title">Pemda</span>
+                        <span class="details">Kab. Kep. Siau Tagulandang Biaro</span>
                     </a>
                     <span class="icon-thumbnail"><i class="fa fa-users"></i></span>
                 </li>

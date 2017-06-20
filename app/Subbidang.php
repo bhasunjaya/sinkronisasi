@@ -11,4 +11,8 @@ class Subbidang extends Model
     {
         return $this->belongsTo('App\Bidang');
     }
+    public function kegiatans()
+    {
+        return $this->hasMany('App\Kegiatan');
+    }
 }

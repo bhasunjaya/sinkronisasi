@@ -14,11 +14,65 @@ class UsulansTableSeeder extends Seeder
      */
     public function run()
     {
-        //fix the broken one
+        // siapin pemda
+        $ddPemda = [];
+        $pemdas = Pemda::all();
+        foreach ($pemdas as $p) {
+            $k = str_slug($p->nama);
+            $ddPemda[$k] = $p->id;
+        }
+
+        //siapin data kegiatan
+        $ddKegiatan = [];
+        $kegiatans = Kegiatan::with('subbidang.bidang')->get();
+        foreach ($kegiatans as $p) {
+            $k = str_slug($p->kegiatan . '-' . $p->subbidang->nama . '-' . $p->subbidang->bidang->nama);
+            $ddKegiatan[$k] = $p->id;
+        }
+        $loop = true;
+        while ($loop) {
+            $raws = DB::table('raws')
+                ->limit(1000)
+                ->where('is_proses', 0)
+                ->get();
+            if ($raws->count()) {
+                $ce = [];
+                $counter = 1;
+                foreach ($raws as $r) {
+                    $pemdaKey = str_slug($r->nama);
+                    $kegiatanKey = str_slug($r->kegiatan . '-' . $r->subbidang . '-' . $r->bidang);
+
+                    $pemda_id = array_get($ddPemda, $pemdaKey, false);
+                    $kegiatan_id = array_get($ddKegiatan, $kegiatanKey, false);
+                    $i = [];
+                    $i['pemda_id'] = $pemda_id;
+                    $i['kegiatan_id'] = $kegiatan_id;
+                    // $ce[] = $i;
+
+                    DB::table('raws')
+                        ->where('id', $r->id)
+                        ->update($i);
+
+                }
+            } else {
+                $loop = false;
+                die('kelarrr');
+            }
+            // if()
+        }
+    }
+
+    public function run2()
+    {
+        DB::table('usulans')->truncate();
+        $dbhost = "localhost";
+        $dbname = "personal_syncdac";
+        $dbusername = "personal";
+        $dbpassword = "password";
+        $link = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbusername, $dbpassword);
 
         // dd('de');
         DB::connection()->disableQueryLog();
-        DB::table('usulans')->truncate();
         $this->call('ambil kopi.. ini bakalan lama... banget');
 
         $loop = true;
@@ -39,8 +93,8 @@ class UsulansTableSeeder extends Seeder
         }
         $counter = 1;
         while ($loop) {
-            $raws = Rawdata::limit(100)
-                ->where('is_proses', false)
+            $raws = Rawdata::limit(10)
+                ->where('is_proses', true)
                 ->get();
 
             if ($raws->count()) {
@@ -87,16 +141,37 @@ class UsulansTableSeeder extends Seeder
                             'lokasi' => $r->lokasi,
                             'dana' => $r->dana,
                         ];
-                        DB::table('usulans')->insert($ins);
-                        $r->is_proses = true;
+                        $statement = $link->prepare("
+                        INSERT INTO usulans(
+                            pemda_id, kegiatan_id, jenis,
+                            kegiatan, volume, satuan,lokasi,dana
+                        )
+                        VALUES(
+                            ?,?,?,?,
+                            ?,?,?,?
+                        )");
+
+                        $statement->execute([
+                            $pemda_id,
+                            $kegiatan_id,
+                            $jenis,
+                            $r->proyek,
+                            $r->output,
+                            $r->satuan,
+                            $r->lokasi,
+                            $r->dana,
+                        ]);
+                        $r->is_proses = false;
                         $r->save();
+                        sleep(1);
+
                     }
                 }
             } else {
+                echo 'abis';
                 $loop = false;
             }
-            $percent = number_format((($counter * 100) / 80247) * 100, 2);
-            $this->call($percent . '%');
+            $this->call($counter);
             $counter++;
         }
 
