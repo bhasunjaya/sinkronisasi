@@ -52,3 +52,31 @@ function getTipeText($t)
             break;
     }
 }
+
+function getSelectDak()
+{
+    $ddDak = [
+        'reguler' => 'DAK REGULER',
+        'penugasan' => 'DAK PENUGASAN',
+        'afirmasi' => 'DAK AFIRMASI',
+    ];
+    return $ddDak;
+}
+
+function getSelectBidang()
+{
+    // return [
+    //     'Cats' => ['leopard' => 'Leopard', 'wwwleopard' => 'wwwLeopard'],
+    //     'Dogs' => ['spaniel' => 'Spaniel'],
+    // ];
+    $bidangs = \App\Bidang::orderBy('id')
+        ->with('subbidangs')->get();
+    $listing = [];
+    foreach ($bidangs as $row) {
+        $ele = [];
+        foreach ($row->subbidangs as $r) {
+            $listing[$row->nama][$r->id] = $r->nama;
+        }
+    }
+    return $listing;
+}

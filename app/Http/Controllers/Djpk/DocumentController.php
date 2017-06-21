@@ -14,12 +14,15 @@ class DocumentController extends Controller
      */
     public function index()
     {
-        $ddDak = [
-            'reguler' => 'DAK REGULER',
-            'penugasan' => 'DAK PENUGASAN',
-            'afirmasi' => 'DAK AFIRMASI',
-        ];
-        return view('djpk.document.index', compact('ddDak'));
+
+        // return getSelectBidang();
+        return view('djpk.document.index');
+    }
+
+    public function listKegiatan(Request $request, $id)
+    {
+        return $id;
+        return Kegiatan::pluck('kegiatan', 'id');
     }
 
     /**

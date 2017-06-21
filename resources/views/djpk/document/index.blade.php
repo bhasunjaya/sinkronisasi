@@ -1,4 +1,27 @@
-@extends('app') @push('styles') @endpush @section('pagetitle')
+@extends('app')
+
+<!-- -->
+@push('styles')
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" />
+@endpush
+<!-- -->
+@push('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#ddSubbidang").on('change',function(e){
+            console.log(this.value);
+            $.get('/djpk/list-kegiatan/'+this.value,function(r){
+                console.log(r);
+            })
+        })
+    })
+
+</script>
+@endpush
+
+<!-- -->
+@section('pagetitle')
 <h1>Upload Excell Dari K/L </h1> @endsection @section('content')
 <div class="container-fluid container-fixed-lg bg-white">
     <div class="row">
@@ -24,27 +47,21 @@
                         <div class="form-group-attached">
                             <div class="form-group form-group-default required" aria-required="true">
                                 <label>Jenis DAK</label>
-                                {!! Form::select('jenis',$ddDak,old('jenis'),['class'=>'form-control']) !!}
+                                {!! Form::select('jenis',getSelectDak(),old('jenis'),['class'=>'form-control','placeholder' => '-- Pilih Jenis DAK --']) !!}
                             </div>
                             <div class="row clearfix">
                                 <div class="col-sm-6">
-                                    <div class="form-group form-group-default required" aria-required="true">
-                                        <label>Bidang</label>
-                                        {!! Form::select('jenis',$ddDak,old('jenis'),['class'=>'form-control']) !!}
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
                                     <div class="form-group form-group-default">
-                                        <label>Sub Bidang</label>
-                                        {!! Form::select('jenis',$ddDak,old('jenis'),['class'=>'form-control']) !!}
+                                        <label>Bidang/Sub-Bidang</label>
+                                        {!! Form::select('subbidang_id',getSelectBidang(),old('jenis'),['class'=>'form-control',"placeholder"=>'--- PILIH BIDANG/SUB-BIDANG ---',"id"=>"ddSubbidang"]) !!}
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="form-group form-group-default required" aria-required="true">
+{{--                             <div class="form-group form-group-default required" aria-required="true">
                                 <label>Jenis Kegiatan</label>
-                                {!! Form::select('jenis',$ddDak,old('jenis'),['class'=>'form-control']) !!}
-                            </div>
+                                {!! Form::select('jenis',getSelectBidang(),old('jenis'),['class'=>'form-control']) !!}
+                            </div> --}}
                         </div>
                         <p class="m-t-10">Upload File Excell</p>
                         <div class="form-group-attached">
@@ -63,4 +80,4 @@
         </div>
     </div>
 </div>
-@endsection @push('scripts') @endpush
+@endsection

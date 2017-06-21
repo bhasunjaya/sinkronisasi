@@ -27,6 +27,7 @@ Route::group(['prefix' => 'djpk', 'namespace' => 'Djpk'], function () {
     Route::resource('kl', 'KlController');
     Route::resource('pemda', 'PemdaController');
     Route::resource('kegiatan', 'KegiatanController');
+    Route::get('list-kegiatan/{id}', 'DocumentController@listKegiatan');
     Route::resource('document', 'DocumentController');
 });
 
