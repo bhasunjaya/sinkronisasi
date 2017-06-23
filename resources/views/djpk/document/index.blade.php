@@ -1,22 +1,20 @@
 @extends('app')
 
 <!-- -->
-@push('styles')
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" />
-@endpush
+@push('styles') @endpush
 <!-- -->
 @push('scripts')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.js"></script>
 <script type="text/javascript">
-    $(document).ready(function(){
-        $("#ddSubbidang").on('change',function(e){
-            console.log(this.value);
-            $.get('/djpk/list-kegiatan/'+this.value,function(r){
-                console.log(r);
+$(document).ready(function() {
+    $("#ddSubbidang").on('change', function(e) {
+        $.get('/djpk/list-kegiatan/' + this.value, function(r) {
+            $("#kegiatan_id option").remove();
+            $.each(r, function() {
+                $("#kegiatan_id").append('<option value="' + this.id + '">' + this.kegiatan + '</option>')
             })
         })
     })
-
+});
 </script>
 @endpush
 
@@ -42,38 +40,46 @@
 
             <div class="panel panel-transparent">
                 <div class="panel-body">
-                    <form id="form-project" role="form" autocomplete="off" novalidate="novalidate">
-                        <p>Basic Information</p>
-                        <div class="form-group-attached">
-                            <div class="form-group form-group-default required" aria-required="true">
-                                <label>Jenis DAK</label>
-                                {!! Form::select('jenis',getSelectDak(),old('jenis'),['class'=>'form-control','placeholder' => '-- Pilih Jenis DAK --']) !!}
-                            </div>
-                            <div class="row clearfix">
-                                <div class="col-sm-6">
-                                    <div class="form-group form-group-default">
-                                        <label>Bidang/Sub-Bidang</label>
-                                        {!! Form::select('subbidang_id',getSelectBidang(),old('jenis'),['class'=>'form-control',"placeholder"=>'--- PILIH BIDANG/SUB-BIDANG ---',"id"=>"ddSubbidang"]) !!}
-                                    </div>
+                    @if (count($errors) > 0)
+                    <div class="alert alert-danger">
+                        <button class="close" data-dismiss="alert"></button>
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif {!! Form::open(['url'=>'djpk/document','files'=>true,"method"=>"post"])!!}
+                    <p>Basic Information</p>
+                    <div class="form-group-attached">
+                        <div class="form-group form-group-default required" aria-required="true">
+                            <label>Jenis DAK</label>
+                            {!! Form::select('jenis',getSelectDak(),old('jenis'),['class'=>'form-control','placeholder' => '-- Pilih Jenis DAK --']) !!}
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-sm-6">
+                                <div class="form-group form-group-default">
+                                    <label>Bidang/Sub-Bidang</label>
+                                    {!! Form::select('subbidang_id',getSelectBidang(),old('jenis'),['class'=>'form-control',"placeholder"=>'--- PILIH BIDANG/SUB-BIDANG ---',"id"=>"ddSubbidang"]) !!}
                                 </div>
                             </div>
+                        </div>
 
-{{--                             <div class="form-group form-group-default required" aria-required="true">
-                                <label>Jenis Kegiatan</label>
-                                {!! Form::select('jenis',getSelectBidang(),old('jenis'),['class'=>'form-control']) !!}
-                            </div> --}}
+                        <div class="form-group form-group-default required" aria-required="true">
+                            <label>Jenis Kegiatan</label>
+                            {!! Form::select('kegiatan_id',[],old('kegiatan_id'),['class'=>'form-control','id'=>'kegiatan_id']) !!}
                         </div>
-                        <p class="m-t-10">Upload File Excell</p>
-                        <div class="form-group-attached">
-                            <div class="form-group form-group-default">
-                                <label>Investor <i class="fa fa-info text-complete m-l-5"></i></label>
-                                {!! Form::file('file',['class'=>'form-control']) !!}
-                            </div>
+                    </div>
+                    <p class="m-t-10">Upload File Excell</p>
+                    <div class="form-group-attached">
+                        <div class="form-group form-group-default">
+                            <label>Excell file</label>
+                            {!! Form::file('file',['class'=>'form-control']) !!}
                         </div>
-                        <br>
-                        <button class="btn btn-success" type="submit">Submit</button>
-                        <button class="btn btn-default"><i class="pg-close"></i> Clear</button>
-                    </form>
+                    </div>
+                    <br>
+                    <button class="btn btn-success" type="submit">Upload Files</button>
+                    {!! Form::close()!!}
                 </div>
             </div>
 

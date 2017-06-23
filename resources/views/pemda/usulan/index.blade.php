@@ -1,104 +1,89 @@
 @extends('app')
 <!-- -->
 @push('styles')
+<link rel="stylesheet" media="screen" href="{{asset('b3/js/handsontable/handsontable.full.min.css')}}">
 <style type="text/css">
-.utipe td {
-    text-transform: uppercase;
-    /*display: inline-block;*/
-    letter-spacing: 0.02em;
-    font-size: 12px !important;
-    font-weight: 600;
-}
-
-.ubidang td {
-    text-transform: uppercase;
-    /*display: inline-block;*/
-    letter-spacing: 0.02em;
-    font-size: 12px !important;
-    font-weight: 600;
-}
-
-.usubbidang td {
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-    font-size: 12px !important;
-}
-
-.ue td {
-    letter-spacing: 0.02em;
-    font-size: 12px !important;
-}
-
-.p40 {
-    padding-left: 40px !important;
-    white-space: normal !important;
-}
-
-.p60 {
-    padding-left: 60px !important;
-    white-space: normal !important;
-}
-
-.p80 {
-    padding-left: 80px !important;
-    white-space: normal !important;
-}
-table {
-    table-layout: fixed;
-    word-wrap: break-word;
-}
-.tdata td {
-    white-space: normal !important;
-    vertical-align: middle;
-}
-.w200{
-    width: 200px;
-}
-.w400{
-    width: 400px;
+#tabledata {
+    width: 100%;
 }
 </style>
 @endpush
 <!-- -->
+
+@push('scripts')
+<script src="{{asset('b3/js/handsontable/handsontable.full.min.js')}}"></script>
+<script src="{{asset('b3/js/pemda-usulan.js')}}"></script>
+@endpush
+<!-- -->
+
 @section('pagetitle') @endsection
 <!-- -->
 
 @section('content')
+<div id="tabledata"></div>
+@endsection
+<!-- -->
+
+@section('content2')
 
 <div class="table-responsive">
-    <table summary="This table shows how to create responsive tables using Bootstrap's default functionality" class="table table-condensed table-bordered table-hover">
+    <table class="table table-condensed table-bordered table-hover">
         <thead>
 
             <tr>
-                <th style="width: 50px">id</th>
-                <th style="width:400px;">Label</th>
-                <th style="width:100px;" class="text-right">Total <br>Output</th>
-                <th style="width:100px;" style="width:100px;" class="text-right">Total <br>Dana</th>
-                <th style="width:100px;" class="text-right">Output</th>
-                <th style="width:400px;" class="">Lokasi</th>
-                <th  style="width:100px;" class="">Harga <br>Satuan</th>
-                <th  style="width:400px;" class="">Target Pencapaian</th>
-                <th  style="width:100px;" class="">Prioritas<br>Kegiatan</th>
-                <th   style="width:100px;" class="">pilihan</th>
+                {{--
+                <th style="width: 50px">id</th> --}}
+                <th rowspan="2">Label</th>
+                <th colspan="2">sementara</th>
+
+                {{-- KL --}}
+                <th colspan="3">Penilaian K/L</th>
+
+                {{-- input pemda --}}
+                <th colspan="5">Input Pemda</th>
+
+                <th rowspan="2">pilihan</th>
             </tr>
             <tr>
-                <th style="width: 50px">id</th>
-                <th style="width:400px;">Label</th>
-                <th style="width:100px;" class="text-right">Total <br>Output</th>
-                <th style="width:100px;" style="width:100px;" class="text-right">Total <br>Dana</th>
-                <th style="width:100px;" class="text-right">Output</th>
-                <th style="width:400px;" class="">Lokasi</th>
-                <th  style="width:100px;" class="">Harga <br>Satuan</th>
-                <th  style="width:400px;" class="">Target Pencapaian</th>
-                <th  style="width:100px;" class="">Prioritas<br>Kegiatan</th>
-                <th   style="width:100px;" class="">pilihan</th>
+                {{--
+                <th style="width: 50px">id</th> --}}
+                <th class="text-right">Output</th>
+                <th class="">Dana</th>
+
+                {{-- KL --}}
+                <th>oup</th>
+                <th>Target Pencapaian</th>
+                <th>Lokasi</th>
+
+                {{-- input pemda --}}
+                <th class="">Output</th>
+                <th class="">Satuan</th>
+                <th class="">Target Pencapaian</th>
+                <th class="">Lokasi</th>
+                <th class="">Prioritas
+                    <br>Kegiatan</th>
+
             </tr>
         </thead>
         <tbody>
-{{--
-            @foreach($dd as $tipe=>$r)
+
             <tr class="utipe">
-                <td>&nbsp;</td>
+                <td class="col-md-4">a</td>
+                <td>b</td>
+                <td>a</td>
+                <td class="col-md-4">b</td>
+                <td>a</td>
+                <td>b</td>
+                <td>a</td>
+                <td>b</td>
+                <td>a</td>
+                <td>b</td>
+                <td>b</td>
+                <td>b</td>
+            </tr>
+            {{-- @foreach($dd as $tipe=>$r)
+            <tr class="utipe">
+                <td>-</td>
                 <td><strong>{{getTipeText($tipe)}}</strong></td>
                 <td class="text-right">{{getTipeTotal($r,'cv')}}</td>
                 <td class="text-right">{{getTipeTotal($r,'sd')}}</td>
@@ -114,7 +99,7 @@ table {
             <tr class="ubidang">
                 <td>&nbsp;</td>
                 <td>
-                    <div class="p40">{{$bidang}}</div>
+                    <div class="p40">{{$rBidang}}</div>
                 </td>
                 <td class="text-right">{{getBidangTotal($rBidang,'cv')}}</td>
                 <td class="text-right">{{getBidangTotal($rBidang,'sd')}}</td>
@@ -162,9 +147,8 @@ table {
             <!-- -->
             @endforeach
             <!-- -->
-
             @endforeach --}}
         </tbody>
     </table>
 </div>
-@endsection @push('scripts') @endpush
+@endsection

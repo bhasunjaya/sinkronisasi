@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Djpk;
 
 use App\Http\Controllers\Controller;
+use App\Kldata;
+use App\Pemda;
+use App\Subbidang;
+use Excel;
 use Illuminate\Http\Request;
 
 class DocumentController extends Controller
@@ -21,8 +25,7 @@ class DocumentController extends Controller
 
     public function listKegiatan(Request $request, $id)
     {
-        return $id;
-        return Kegiatan::pluck('kegiatan', 'id');
+        return \App\Kegiatan::where('subbidang_id', $id)->get();
     }
 
     /**
@@ -32,7 +35,8 @@ class DocumentController extends Controller
      */
     public function create()
     {
-        //
+
+        dd($listPemda);
     }
 
     /**
@@ -43,7 +47,75 @@ class DocumentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules = [
+            'subbidang_id' => 'required',
+            'file' => 'required|mimes:xls,xlsx',
+        ];
+        $message = [
+            'subbidang_id.required' => "Harus memilih subbidang",
+            'file.required' => "Harus memilih file excell yang akan di upload",
+            'file.mimes' => "File harus berformat excell",
+        ];
+        $this->validate($request, $rules, $message);
+
+        $path = $request->file->store('uploads');
+
+        $subbidang_id = $request->subbidang_id;
+        $kegiatan_id = $request->kegiatan_id;
+        $jenis = $request->jenis;
+        $oSubbidang = Subbidang::find($subbidang_id);
+        // return $oSubbidang;
+
+        config([
+            'excel.import.heading' => false,
+            // 'excel.import.startRow' => 5,
+        ]);
+        // config(['excel.import.startRow' => 1]);
+        $path = "app/" . "uploads/U4adCMJgXgPrrjQiEAYePT2dfoYr3AQ2Z9GNdjWH.xlsx";
+        $rows = Excel::selectSheetsByIndex(0)->load(storage_path($path), function ($reader) {
+
+        })->skip(4)->get();
+
+        //prepare all the daerah
+        $listPemda = [];
+        $pemdas = Pemda::all();
+        foreach ($pemdas as $p) {
+            $listPemda[$p->prov][$p->kab] = $p->id;
+        }
+        foreach ($rows as $r) {
+            // dd($rows);
+
+            $matchPemdaId = $listPemda[$r[1]][$r[2]];
+            // dd($matchPemdaId);
+            $kldata = Kldata::where([
+                'subbidang_id' => $subbidang_id,
+                'kegiatan_id' => $kegiatan_id,
+                'jenis' => $jenis,
+                'pemda_id' => $matchPemdaId,
+            ])->first();
+            $ins = [];
+            if ($r[5] && $r[6] && $r[7]) {
+
+                if (!$kldata) {
+
+                    $ins['pemda_id'] = $matchPemdaId;
+                    $ins['bidang_id'] = $oSubbidang->bidang_id;
+                    $ins['subbidang_id'] = $subbidang_id;
+                    $ins['kegiatan_id'] = $kegiatan_id;
+                    $ins['jenis'] = $jenis;
+                    $ins['volume'] = $r[5];
+                    $ins['satuan'] = $r[6];
+                    $ins['unit_cost'] = $r[7];
+                    $ins['target'] = $r[9];
+                    $ins['lokasi'] = $r[10];
+                    Kldata::create($ins);
+                } else {
+                    $kldata->update($ins);
+                }
+            }
+
+        }
+
     }
 
     /**

@@ -32,5 +32,6 @@ Route::group(['prefix' => 'djpk', 'namespace' => 'Djpk'], function () {
 });
 
 Route::group(['prefix' => 'pemda', 'namespace' => 'Pemda'], function () {
+    Route::post('usulan', 'UsulanController@postIndex');
     Route::get('usulan', 'UsulanController@index');
 });

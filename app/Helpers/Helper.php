@@ -80,3 +80,52 @@ function getSelectBidang()
     }
     return $listing;
 }
+
+function getTipeTotalKL($data, $tipe)
+{
+    $total = 0;
+    $kl = [];
+    foreach ($data as $r) {
+        if ($r->jenis == $tipe) {
+            $total += $r->volume;
+        }
+    }
+    return $total;
+}
+
+function getTipeTotalKLBidang($allBidang, $data, $bidang)
+{
+    $total = 0;
+    $kl = [];
+    $bid = $allBidang[strtolower($bidang)];
+    foreach ($data as $r) {
+        if ($r->bidang_id == $bid) {
+            $total += $r->volume;
+        }
+    }
+    return $total;
+}
+
+function getTipeTotalKLSubBidang($allSubbidang, $data, $bidang, $sub)
+{
+    $total = 0;
+    $kl = [];
+    $bid = $allSubbidang[strtolower($bidang . $sub)];
+    foreach ($data as $r) {
+        if ($r->subbidang_id == $bid) {
+            $total += $r->volume;
+        }
+    }
+    return $total;
+}
+
+function getKlData($bidang, $sub)
+{
+    dd($bidang, $sub);
+    $bid = $allSubbidang[strtolower($bidang . $sub)];
+    foreach ($data as $r) {
+        if ($r->jenis == $jenis && $kegiatan_id == $r->kegiatan_id) {
+            return $r->$param;
+        }
+    }
+}

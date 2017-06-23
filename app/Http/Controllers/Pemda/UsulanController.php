@@ -2,18 +2,62 @@
 
 namespace App\Http\Controllers\Pemda;
 
+use App\Bidang;
 use App\Http\Controllers\Controller;
-use App\Kegiatan;
-use App\Usulan;
+use App\Kldata;
+use App\Subbidang;
 use DB;
 use Illuminate\Http\Request;
 
 class UsulanController extends Controller
 {
 
-    public function index(Request $request)
+    public function postIndex(Request $request)
+    {
+        $pemda_id = 1;
+
+        $bidangs = Bidang::with('subbidangs')->get();
+
+        $tipe = ['reguler', 'penugasan', 'afirmasi'];
+        $alldata = [];
+        foreach ($tipe as $t) {
+            $total = hitungTipeTotal($pemda_id, $t);
+            $data = [];
+            $data['label'] = $t;
+            $data['output'] = object_get($total, 'touput', 0);
+            $data['dana'] = object_get($total, 'tdana', 0);
+            $alldata[] = $data;
+
+            // //bidang
+            foreach ($bidangs as $b) {
+                $total = hitungBidangTotal($pemda_id, $t, $b->id);
+                $data = [];
+                $data['label'] = $b->nama;
+                $data['output'] = object_get($total, 'output');
+                $data['dana'] = object_get($total, 'dana');
+                if ($data['output']) {
+                    $alldata[] = $data;
+                }
+            }
+
+        }
+
+        return $alldata;
+
+    }
+    public function postIndex2(Request $request)
     {
         $pemda_id = 69;
+        $space = "";
+        $allBidang = [];
+        $allSubbidang = [];
+        foreach (Bidang::all() as $b) {
+            $allBidang[strtolower($b->nama)] = $b->id;
+        }
+        foreach (Subbidang::with('bidang')->get() as $b) {
+            $allSubbidang[strtolower($b->bidang->nama . $b->nama)] = $b->id;
+        }
+
         $sql = "SELECT jenis,bidangs.nama as nbidang, subbidangs.nama as nsub, usulans.kegiatan, count(usulans.output) as cv, sum(usulans.dana) as sd FROM `usulans` LEFT JOIN kegiatans ON kegiatans.id = usulans.kegiatan_id LEFT JOIN subbidangs ON subbidangs.id = kegiatans.subbidang_id LEFT JOIN bidangs ON bidangs.id = subbidangs.bidang_id WHERE pemda_id=69 GROUP BY jenis,nbidang,nsub";
         $gg = DB::table('usulans')
             ->where('pemda_id', $pemda_id)
@@ -37,61 +81,57 @@ class UsulanController extends Controller
             }
         }
 
-        // return $dd;
+        $kldata = Kldata::where('pemda_id', $pemda_id)->get();
+        return $dd;
+        $all = [];
+        foreach ($dd as $tipe => $r) {
+            $all[] = [
+                getTipeText($tipe),
+                getTipeTotal($r, 'cv'),
+                getTipeTotal($r, 'sd'),
+                getTipeTotalKL($kldata, $tipe),
+            ];
+            foreach ($r as $bidang => $rBidang):
+                $all[] = [
+                    $bidang,
+                    getBidangTotal($rBidang, 'cv'),
+                    getBidangTotal($rBidang, 'sd'),
+                    getTipeTotalKLBidang($allBidang, $kldata, $bidang),
+                ];
 
-        return view('pemda.usulan.index', compact('dd'));
+                foreach ($rBidang as $sub => $rSub):
+                    $all[] = [
+                        $sub,
+                        getBidangSub($rSub, 'cv'),
+                        getBidangSub($rSub, 'sd'),
+                        getTipeTotalKLSubBidang($allSubbidang, $kldata, $bidang, $sub),
+                    ];
 
+                    foreach ($rSub as $e):
+                        $all[] = [
+                            $e->kegiatan,
+                            number_format($e->cv, 2, ',', '.'),
+                            number_format($e->sd, 2, ',', '.'),
+                            // number_format($kldata->volume, 2, ',', '.'),
+                            // $kldata->volume,
+                            getKlData($bidang, $sub),
+                            $kldata->target,
+                            $kldata->lokasi,
+                        ];
+                    endforeach;
+                endforeach;
+
+            endforeach;
+        }
+        return $all;
     }
-
-    public function inde2x(Request $request)
+    public function index(Request $request)
     {
 
-        $pemda_id = 69;
+        return $this->postIndex($request);
+        // return $dd;
+        return view('pemda.usulan.index');
 
-        $gg = Usulan::where('pemda_id', $pemda_id)
-            ->groupBy('jenis', 'pemda_id', 'kegiatan_id')
-            ->select(DB::raw('jenis,pemda_id,kegiatan_id,
-            count(output) as cv,sum(dana) as sd'))
-            ->get();
-
-        $collect = [];
-        $listKegiatans = [];
-        $total = 0;
-        $total_sd = 0;
-        $total_cv = 0;
-        foreach ($gg as $g) {
-            $listKegiatans[] = $g->kegiatan_id;
-            $col = ['jenis' => $g->jenis, 'kegiatan_id' => $g->kegiatan_id, 'cv' => $g->cv, 'sd' => $g->sd];
-            $collect[] = $col;
-        }
-
-        $collection = collect($collect);
-        $colgroup = $collection->groupBy('jenis');
-
-        $rd = [];
-        $total_cv = 0;
-        $total_sd = 0;
-        foreach ($colgroup as $tipe => $c) {
-            $total_cv += getTotal($c, 'cv');
-            $total_sd += getTotal($c, 'sd');
-            $t = [];
-            $t['title'] = $tipe;
-            $t['total_cv'] = $total_cv;
-            $t['total_sd'] = $total_sd;
-            $t['data'] = $c;
-            $rd[] = $t;
-        }
-        return $rd;
-
-        // return $data;
-
-        $lookupKegiatan = Kegiatan::with('subbidang.bidang')->whereIn('id', $listKegiatans)->get();
-        $mKegiatans = [];
-        foreach ($lookupKegiatan as $r) {
-            $mKegiatans[$r->id] = $r;
-        }
-        return $mKegiatans;
-        // dd($data);
-        return view('pemda.usulan.index', compact('data', 'mKegiatans'));
     }
+
 }
