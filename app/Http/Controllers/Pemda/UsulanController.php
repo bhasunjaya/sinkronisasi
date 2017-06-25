@@ -5,133 +5,99 @@ namespace App\Http\Controllers\Pemda;
 use App\Bidang;
 use App\Http\Controllers\Controller;
 use App\Kldata;
-use App\Subbidang;
-use DB;
 use Illuminate\Http\Request;
 
-class UsulanController extends Controller
-{
+class UsulanController extends Controller {
 
-    public function postIndex(Request $request)
-    {
-        $pemda_id = 1;
+	public function index(Request $request) {
 
-        $bidangs = Bidang::with('subbidangs')->get();
+		// return $this->postIndex($request);
+		// return $dd;
+		return view('pemda.usulan.index');
 
-        $tipe = ['reguler', 'penugasan', 'afirmasi'];
-        $alldata = [];
-        foreach ($tipe as $t) {
-            $total = hitungTipeTotal($pemda_id, $t);
-            $data = [];
-            $data['label'] = $t;
-            $data['output'] = object_get($total, 'touput', 0);
-            $data['dana'] = object_get($total, 'tdana', 0);
-            $alldata[] = $data;
+	}
+	public function postIndex(Request $request) {
+		$pemda_id = 1;
+		$danas = getAllUsulanPerBidang($pemda_id);
+		$kldatas = Kldata::wherePemdaId($pemda_id)->get();
+		$bidangs = Bidang::with('subbidangs.kegiatans')->get();
 
-            // //bidang
-            foreach ($bidangs as $b) {
-                $total = hitungBidangTotal($pemda_id, $t, $b->id);
-                $data = [];
-                $data['label'] = $b->nama;
-                $data['output'] = object_get($total, 'output');
-                $data['dana'] = object_get($total, 'dana');
-                if ($data['output']) {
-                    $alldata[] = $data;
-                }
-            }
+		// return $kldatas;
 
-        }
+		$all = [];
+		$tipes = ['reguler', 'penugasan', 'afirmasi'];
 
-        return $alldata;
+		foreach ($tipes as $tipe) {
+			$ins = [];
+			$ins['level'] = 1;
+			$ins['label'] = ['level' => 1, 'label' => $tipe];
+			$ins['output'] = hitungTotalOutputTipe($danas, $tipe);
+			$ins['dana'] = hitungTotalOutputDana($danas, $tipe);
 
-    }
-    public function postIndex2(Request $request)
-    {
-        $pemda_id = 69;
-        $space = "";
-        $allBidang = [];
-        $allSubbidang = [];
-        foreach (Bidang::all() as $b) {
-            $allBidang[strtolower($b->nama)] = $b->id;
-        }
-        foreach (Subbidang::with('bidang')->get() as $b) {
-            $allSubbidang[strtolower($b->bidang->nama . $b->nama)] = $b->id;
-        }
+			$ins['kl_output'] = getKlByTipe($kldatas, $tipe, 'output');
+			$ins['kl_target'] = '';
+			$ins['kl_lokasi'] = '';
+			$all[] = $ins;
 
-        $sql = "SELECT jenis,bidangs.nama as nbidang, subbidangs.nama as nsub, usulans.kegiatan, count(usulans.output) as cv, sum(usulans.dana) as sd FROM `usulans` LEFT JOIN kegiatans ON kegiatans.id = usulans.kegiatan_id LEFT JOIN subbidangs ON subbidangs.id = kegiatans.subbidang_id LEFT JOIN bidangs ON bidangs.id = subbidangs.bidang_id WHERE pemda_id=69 GROUP BY jenis,nbidang,nsub";
-        $gg = DB::table('usulans')
-            ->where('pemda_id', $pemda_id)
-            ->groupBy('jenis', 'bidang', 'sub', 'kegiatan')
-            ->leftJoin('kegiatans', 'usulans.kegiatan_id', '=', 'kegiatans.id')
-            ->leftJoin('subbidangs', 'subbidangs.id', '=', 'kegiatans.subbidang_id')
-            ->leftJoin('bidangs', 'bidangs.id', '=', 'subbidangs.bidang_id')
-            ->select(DB::raw('jenis,bidangs.nama as bidang,
-    subbidangs.nama as sub,
-    kegiatans.kegiatan,
-    count(usulans.output) as cv,
-    sum(usulans.dana) as sd '))
-            ->get();
-        $d = $gg->groupBy('jenis');
-        $cc = [];
-        $dd = [];
-        foreach ($d as $k => $v) {
-            $cc[$k] = $v->groupBy('bidang');
-            foreach ($cc[$k] as $l => $x) {
-                $dd[$k][$l] = $x->groupBy('sub');
-            }
-        }
+			foreach ($bidangs as $bidang) {
+				$ins = [];
+				$ins['level'] = 2;
+				$ins['label'] = ['level' => 2, 'label' => $bidang->nama];
+				$ins['output'] = hitungTotalOutputBidang($danas, $tipe, $bidang->id);
+				$ins['dana'] = hitungTotalDanaBidang($danas, $tipe, $bidang->id);
+				$ins['kl_output'] = getKlByBidang($kldatas, $tipe, 'output');
+				$ins['kl_target'] = '';
+				$ins['kl_lokasi'] = '';
 
-        $kldata = Kldata::where('pemda_id', $pemda_id)->get();
-        return $dd;
-        $all = [];
-        foreach ($dd as $tipe => $r) {
-            $all[] = [
-                getTipeText($tipe),
-                getTipeTotal($r, 'cv'),
-                getTipeTotal($r, 'sd'),
-                getTipeTotalKL($kldata, $tipe),
-            ];
-            foreach ($r as $bidang => $rBidang):
-                $all[] = [
-                    $bidang,
-                    getBidangTotal($rBidang, 'cv'),
-                    getBidangTotal($rBidang, 'sd'),
-                    getTipeTotalKLBidang($allBidang, $kldata, $bidang),
-                ];
+				\Debugbar::log(hitungTotalDanaBidang($danas, $tipe, $bidang->id));
 
-                foreach ($rBidang as $sub => $rSub):
-                    $all[] = [
-                        $sub,
-                        getBidangSub($rSub, 'cv'),
-                        getBidangSub($rSub, 'sd'),
-                        getTipeTotalKLSubBidang($allSubbidang, $kldata, $bidang, $sub),
-                    ];
+				if (array_get($ins, 'output', false)) {
+					$all[] = $ins;
 
-                    foreach ($rSub as $e):
-                        $all[] = [
-                            $e->kegiatan,
-                            number_format($e->cv, 2, ',', '.'),
-                            number_format($e->sd, 2, ',', '.'),
-                            // number_format($kldata->volume, 2, ',', '.'),
-                            // $kldata->volume,
-                            getKlData($bidang, $sub),
-                            $kldata->target,
-                            $kldata->lokasi,
-                        ];
-                    endforeach;
-                endforeach;
+					foreach ($bidang->subbidangs as $subbidang) {
 
-            endforeach;
-        }
-        return $all;
-    }
-    public function index(Request $request)
-    {
+						$ins = [];
+						$ins['level'] = 3;
+						$ins['label'] = ['level' => 3, 'label' => $subbidang->nama];
+						$ins['output'] = hitungTotalOutputSubbidang($danas, $tipe, $subbidang->id);
+						$ins['dana'] = hitungTotalDanaSubbidang($danas, $tipe, $subbidang->id);
 
-        return $this->postIndex($request);
-        // return $dd;
-        return view('pemda.usulan.index');
+						$ins['kl_output'] = getKlBySubbidang($kldatas, $tipe, $subbidang->id, 'output');
+						$ins['kl_target'] = '';
+						$ins['kl_lokasi'] = '';
 
-    }
+						if (array_get($ins, 'output', false)) {
+							$all[] = $ins;
+
+							foreach ($subbidang->kegiatans as $kegiatan) {
+								$ins = [];
+								$ins['level'] = 4;
+								$ins['label'] = ['level' => 4, 'label' => $kegiatan->kegiatan];
+								$ins['output'] = hitungTotalOutputKegiatan($danas, $tipe, $kegiatan->id);
+								$ins['dana'] = hitungTotalDanaKegiatan($danas, $tipe, $kegiatan->id);
+
+								$oKlData = getKlByKegiatan($kldatas, $tipe, $kegiatan->id);
+								$ins['kl_output'] = object_get($oKlData, 'volume', '');
+								$ins['kl_target'] = object_get($oKlData, 'target', '');
+								$ins['kl_lokasi'] = object_get($oKlData, 'lokasi', '');
+
+								// $ins['kl_output'] = $tipe;
+								// $ins['kl_target'] = $kegiatan->id;
+								// $ins['kl_lokasi'] = 'ss';
+
+								if (array_get($ins, 'output', false)) {
+									$all[] = $ins;
+								}
+							}
+						}
+					}
+				}
+
+			}
+		}
+
+		return $all;
+
+	}
 
 }

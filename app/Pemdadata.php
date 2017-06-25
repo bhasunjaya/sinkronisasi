@@ -4,7 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Usulan extends Model {
+class Pemdadata extends Model {
+	//
 	public function kegiatan() {
 		return $this->belongsTo('App\Kegiatan');
 	}

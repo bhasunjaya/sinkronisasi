@@ -54,7 +54,7 @@ SET
 WHERE subbidang_id=0
 
 /*
-3. generate the kegiatan_id
+3. generate the kegiatan_id, MD5 kadang failed
 */
 UPDATE raws 
 SET 

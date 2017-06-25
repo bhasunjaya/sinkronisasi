@@ -95,12 +95,35 @@
                         </li>
                     </ul>
                 </li>
-                <li class="">
-                    <a href="{{url('pemda/usulan')}}" class="detailed">
+                <li class="{{prefixActive('/pemda')}}">
+                    <a href="javascript:;" class="detailed">
                         <span class="title">Pemda</span>
                         <span class="details">Kab. Kep. Siau Tagulandang Biaro</span>
                     </a>
-                    <span class="icon-thumbnail"><i class="fa fa-users"></i></span>
+                    <span class="icon-thumbnail">P</span>
+                    <ul class="sub-menu">
+                        <li class="">
+                            <a href="{{url('/pemda/usulan')}}">Data Usulan</a>
+                            <span class="icon-thumbnail">b</span>
+                        </li>
+                        <li class="">
+                            <a href="{{url('/pemda/entry')}}">Entry Data</a>
+                            <span class="icon-thumbnail">b</span>
+                        </li>
+                    </ul>
+                </li>
+                <li class="{{prefixActive('/kl')}}">
+                    <a href="javascript:;" class="detailed">
+                        <span class="title">K/L Teknis</span>
+                        <span class="details">Kementrian Something</span>
+                    </a>
+                    <span class="icon-thumbnail">Kl</span>
+                    <ul class="sub-menu">
+                        <li class="">
+                            <a href="{{url('/kl/kldata')}}">Data K/L</a>
+                            <span class="icon-thumbnail">b</span>
+                        </li>
+                    </ul>
                 </li>
             </ul>
             <div class="clearfix"></div>
