@@ -7,23 +7,7 @@
 <link rel="stylesheet" type="text/css" href="{{asset('flat/css/select2.min.css')}}"> @endpush
 <!-- -->
 
-@section('pagetitle')
-<div class="row">
-    <div class="col-md-8">
-        <h2 class="page-header">Review: {{$pemda->nama}}</h2>
-    </div>
-    <div class="col-md-4">
-        <div class="text-right">
-            <div class="form-group">
-                <label>Pilih Provinsi</label>
-                <select class="form-control">
-                    <option>asdad</option>
-                </select>
-            </div>
-
-        </div>
-    </div>
-</div>
+@section('pagetitle')<h3 class="page-header">Review: {{$pemda->nama}}</h3>
 @endsection
 <!-- -->
 
@@ -43,37 +27,32 @@
     </div>
 </div>
 
-<!-- <div class="table-responsive"> -->
 <table class="table table-hover table-bordered table-condensed" id="datatables">
     <thead>
         <tr>
             <th>&nbsp;</th>
             <th>&nbsp;</th>
-            <th>&nbsp;</th>
-            <th>&nbsp;</th>
-            <th colspan="4">&nbsp;</th>
-            <th colspan="3">DATA AWAL</th>
+            <th colspan="4">DATA AWAL</th>
+            <th colspan="3">DATA K/L</th>
             <th colspan="4">ENTRY INPUT PEMDA</th>
         </tr>
         <tr>
             <th>Pilihan</th>
             <th>Status</th>
-            <th>Status</th>
-            <th>Status</th>
-            <th style="width: 100px">Jenis</th>
+            <th>Jenis</th>
             <th style="min-width: 450px">Kegiatan</th>
 
-            <th style="width: 100px">Output</th>
-            <th style="width: 100px">Dana</th>
+            <th>Output</th>
+            <th>Dana</th>
 
-            <th style="width: 100px">Output</th>
-            <th style="min-width: 400px">Target</th>
-            <th style="min-width: 400px">Lokasi</th>
+            <th>Output</th>
+            <th>Target</th>
+            <th>Lokasi</th>
 
-            <th style="width: 100px">Output</th>
-            <th style="width: 100px">Kebutuhan Dana</th>
-            <th style="min-width: 400px">Target</th>
-            <th style="min-width: 400px">Lokasi</th>
+            <th>Output</th>
+            <th>Kebutuhan Dana</th>
+            <th>Target</th>
+            <th>Lokasi</th>
 
         </tr>
     </thead>
@@ -84,14 +63,10 @@
             <td class="v-align-middle">
                 <a href="{{url('bappenas/sinkronisasi/'.$row->id)}}">detail</a>
             </td>
-            <td>output</td>
-            <td>lokasi</td>
 
-            <td class="">
-                <span class="label label-danger">butuh diskusi</span>
-            </td>
+            <td>{!! getFlagSinkronisasi($row) !!}</td>
             <td class="">{{$row->jenis}}</td>
-            <td class="">
+            <td style="width: 400px">
                 <strong>{{$row->kegiatan->subbidang->bidang->nama}} / {{$row->kegiatan->subbidang->nama}}</strong>
                 <p>{{$row->kegiatan->kegiatan}}</p>
             </td>
@@ -111,7 +86,6 @@
         @endforeach
     </tbody>
 </table>
-<!-- </div> -->
 @endsection
 <!-- -->
 @push('scripts')
@@ -122,7 +96,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
     $('#datatables').DataTable({
-        "scrollY": 500,
+        "scrollY": 350,
         "scrollX": true,
         "paging": false
     });

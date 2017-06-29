@@ -44,7 +44,6 @@ Route::group(['prefix' => 'pemda', 'namespace' => 'Pemda'], function () {
 });
 
 Route::group(['prefix' => 'kl', 'namespace' => 'Kl'], function () {
-    // Route::resource('kldata', 'KldataController');
     Route::get('review', 'KlController@review');
     Route::any('pemda', 'KlController@pemda');
     Route::post('confirm', 'KlController@confirm');
@@ -55,6 +54,7 @@ Route::group(['prefix' => 'bappenas', 'namespace' => 'Bappenas'], function () {
     Route::get('verifikasi', 'BappenasController@verivikasi');
     Route::any('pemda', 'BappenasController@pemda');
     Route::get('review', 'BappenasController@review');
+    Route::post('confirm', 'BappenasController@confirm');
     Route::get('sinkronisasi/{sinkronisasi_id}', 'BappenasController@sinkronisasi');
 });
 

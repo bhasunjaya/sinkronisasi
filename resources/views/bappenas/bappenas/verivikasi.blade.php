@@ -10,25 +10,20 @@
 <!-- -->
 
 @section('content')
-<div class="row">
-    <div class="col-md-8 col-md-offset-2">
-        <div class="panel panel-default">
-            <div class="panel-heading"><strong>Filter Data</strong></div>
-            <div class="panel-body">
-                {!! Form::open(['url'=>'kl/pemda']) !!}
-                <div class="form-group">
-                    <label for="">Pilih Daerah</label>
-                    <select class="form-control s2" name="pemda_id">
-                        @foreach(\App\Pemda::all() as $pemda)
-                        <option value="{{$pemda->id}}">{{$pemda->nama}}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">Tampilkan Data</button>
-                {!! Form::close() !!}
-            </div>
+<div class="panel panel-default">
+    <div class="panel-heading"><strong>Filter Data</strong></div>
+    <div class="panel-body">
+        {!! Form::open(['url'=>'bappenas/pemda']) !!}
+        <div class="form-group">
+            <label for="">Pilih Daerah</label>
+            <select class="form-control s2" name="pemda_id">
+                @foreach(\App\Pemda::all() as $pemda)
+                <option value="{{$pemda->id}}">{{$pemda->nama}}</option>
+                @endforeach
+            </select>
         </div>
-
+        <button type="submit" class="btn btn-primary">Tampilkan Data</button>
+        {!! Form::close() !!}
     </div>
 </div>
 
