@@ -1,11 +1,14 @@
 <?php
-function prefixActive($prefix, $output = 'open active')
+function angka($number)
 {
-    if (Route::getCurrentRoute()->getPrefix() == $prefix) {
-        return $output;
+    $number = $number + 0;
+    if (strpos($number, '.')) {
+        return number_format($number, 2, ',', '.');
+    } else {
+        return number_format($number, 0, ',', '.');
     }
-}
 
+}
 function getTipeTotal($o, $m)
 {
     $total = 0;

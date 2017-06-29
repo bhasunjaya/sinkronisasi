@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Pemda;
 
 use App\Http\Controllers\Controller;
-use App\Kldata;
 use App\Pemdadata;
 use App\Sinkronisasi;
 use Illuminate\Http\Request;
@@ -17,16 +16,25 @@ class EntryController extends Controller
      */
     public function index()
     {
+        //user_id dapet dari auth
+        $user_id = 1628; // Dinas ESDM prov aceh
+        $usergroup = 'pemda';
 
-        $bidang['all'] = [6];
+        $user = \App\User::with('role')->whereId($user_id)->first();
 
-        $bidang['reguler'] = [13, 1, 5, 14];
-        $bidang['penugasan'] = [1, 14, 4, 5];
-        $bidang['afirmasi'] = [13, 14, 1];
-        $pemda_id = 1;
+        $userpemda = \DB::table('pemda_user')->where('user_id', $user->id)->first();
+        $bidangs = \DB::table('bidang_dinas')
+            ->where('dinas_id', $user->role->object_id)
+            ->pluck('bidang_id');
+        $pemda_id = $userpemda->pemda_id;
+
+        $auth['user'] = $user;
+        $auth['usergroup'] = $usergroup;
+        $auth['pemda_id'] = $userpemda->pemda_id;
+        $auth['bidangs'] = $bidangs;
 
         $sinkronisasis = Sinkronisasi::with('kldata', 'pemdadata', 'kegiatan.subbidang.bidang')
-            ->whereIn('bidang_id', $bidang['all'])
+            ->whereIn('bidang_id', $bidangs)
             ->where('pemda_id', $pemda_id)
             ->orderBy('jenis')
             ->orderBy('bidang_id')
@@ -153,23 +161,10 @@ class EntryController extends Controller
 
     public function getDataEntry($id)
     {
-        $sinkronisasi = Sinkronisasi::with('kegiatan.subbidang.bidang')
+        $sinkronisasi = Sinkronisasi::with('kegiatan.subbidang.bidang', 'kldata', 'pemdadata')
             ->where('id', $id)
             ->first();
 
-        $kldata = Kldata::where('pemda_id', $sinkronisasi->pemda_id)
-            ->where('bidang_id', $sinkronisasi->bidang_id)
-            ->where('kegiatan_id', $sinkronisasi->kegiatan_id)
-            ->where('subbidang_id', $sinkronisasi->subbidang_id)
-            ->where('jenis', $sinkronisasi->jenis)
-            ->first();
-
-        $pemdadata = Pemdadata::where('sinkronisasi_id', $sinkronisasi->id)->first();
-
-        return [
-            'sinkronisasi' => $sinkronisasi,
-            'kldata' => $kldata,
-            'pemdadata' => $pemdadata,
-        ];
+        return $sinkronisasi;
     }
 }

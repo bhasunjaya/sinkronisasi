@@ -12,36 +12,24 @@ var app = new Vue({
     data: {
         errors: [],
         sinkronisasi: {
-            jenis: '',
-            dana: '',
-            output: '',
             kegiatan: {
-                kegiatan:'',
                 subbidang: {
-                    nama: '',
-                    bidang: {
-                        nama: ''
-                    }
+                    bidang: {}
                 }
             },
+            pemdadata: {
+                prioritas: 1,
+                volume: 0,
+                satuan: 0,
+                unit_cost: 0,
+                dana: 0,
+                target: 0,
+            },
+            kldata: {
+                volume: 0,
+                volume: 0,
+            }
         },
-        kldata: {
-           volume:0,
-           satuan:'',
-           unit_cost:'',
-           target:'',
-        },
-        pemdadata: {
-            prioritas:0,
-            volume: null,
-            satuan: null,
-            unit_cost: null,
-            dana: null,
-            target: null,
-            lokasi: null,
-        },
-        // // dana:0,
-        // usulan: [],
         lokasi: [],
         newLokasi: '',
         newPrioritas: '',
@@ -51,43 +39,44 @@ var app = new Vue({
     },
     computed: {
         pecahLokasi: function() {
-            if (this.kldata.lokasi) {
-                return this.kldata.lokasi.split(";")
+            if (this.sinkronisasi.kldata.lokasi) {
+                return this.sinkronisasi.kldata.lokasi.split(";")
             }
         },
-        dana:function(){
-            return this.pemdadata.volume*this.pemdadata.unit_cost;
+        dana: function() {
+            return this.sinkronisasi.pemdadata.volume * this.sinkronisasi.pemdadata.unit_cost;
         }
     },
     methods: {
         loadData: function() {
             axios.get($("#loadURL").val())
                 .then(response => {
-                    // this.$set(this.data, 'sinkronisasi', response.data.sinkronisasi)
-                    // console.log(response.data.sinkronisasi);
-                    this.sinkronisasi = response.data.sinkronisasi;
-                    this.kldata = response.data.kldata;
-                    // this.usulan = response.data.usulan;
-                    // console.log(response.data.pemdadata);
-                    if (response.data.pemdadata) {
-                        this.pemdadata = response.data.pemdadata;
-                        // console.log();
-                    //     this.prioritas = response.data.pemdadata.prioritas;
-                        this.lokasi = JSON.parse(this.pemdadata.lokasi);
+                    this.sinkronisasi = response.data;
+                    if (this.sinkronisasi.pemdadata) {
+                        //     this.pemdadata = response.data.pemdadata;
+                        //     // console.log();
+                        //     //     this.prioritas = response.data.pemdadata.prioritas;
+                            this.lokasi = JSON.parse(this.sinkronisasi.pemdadata.lokasi);
                     } else {
-                        this.pemdadata.volume = parseFloat(response.data.kldata.volume)
-                        this.pemdadata.satuan = response.data.kldata.satuan
-                        this.pemdadata.unit_cost = parseFloat(response.data.kldata.unit_cost)
-                        this.pemdadata.dana = parseFloat(response.data.kldata.dana)
-                        this.pemdadata.target = response.data.kldata.target
-                        var lokasis = response.data.kldata.lokasi.split(";");
-                        var i;
-                        for (i = 0; i < lokasis.length; i++) {
-                            var alok = {
-                                lokasi: lokasis[i],
-                                prioritas: i + 1
+                        if (this.sinkronisasi.pemdadata === null) {
+                            var v = {
+                                prioritas: 1,
+                                volume: parseFloat(this.sinkronisasi.kldata.volume),
+                                satuan: this.sinkronisasi.kldata.satuan,
+                                unit_cost: parseFloat(this.sinkronisasi.kldata.unit_cost),
+                                dana: parseFloat(this.sinkronisasi.kldata.dana),
+                                target: this.sinkronisasi.kldata.target
                             };
-                            this.lokasi.push(alok);
+                            this.sinkronisasi.pemdadata = v;
+                            var lokasis = this.sinkronisasi.kldata.lokasi.split(";");
+                            var i;
+                            for (i = 0; i < lokasis.length; i++) {
+                                var alok = {
+                                    lokasi: lokasis[i],
+                                    prioritas: i + 1
+                                };
+                                this.lokasi.push(alok);
+                            }
                         }
                     }
                 })
@@ -106,17 +95,17 @@ var app = new Vue({
         simpan: function(e) {
             let data = {
                 sinkronisasi_id: this.sinkronisasi.id,
-                pemda_id: this.kldata.pemda_id,
-                bidang_id: this.kldata.bidang_id,
-                subbidang_id: this.kldata.subbidang_id,
-                kegiatan_id: this.kldata.kegiatan_id,
-                jenis: this.kldata.jenis,
-                volume: this.pemdadata.volume,
-                satuan: this.pemdadata.satuan,
-                unit_cost: this.pemdadata.unit_cost,
+                pemda_id: this.sinkronisasi.kldata.pemda_id,
+                bidang_id: this.sinkronisasi.kldata.bidang_id,
+                subbidang_id: this.sinkronisasi.kldata.subbidang_id,
+                kegiatan_id: this.sinkronisasi.kldata.kegiatan_id,
+                jenis: this.sinkronisasi.kldata.jenis,
+                volume: this.sinkronisasi.pemdadata.volume,
+                satuan: this.sinkronisasi.pemdadata.satuan,
+                unit_cost: this.sinkronisasi.pemdadata.unit_cost,
                 dana: this.dana,
-                target: this.pemdadata.target,
-                prioritas: this.pemdadata.prioritas,
+                target: this.sinkronisasi.pemdadata.target,
+                prioritas: this.sinkronisasi.pemdadata.prioritas,
                 lokasi: this.lokasi
             }
             console.log(data);
@@ -159,7 +148,7 @@ var app = new Vue({
 <input type="hidden" id="loadURL" value="{{url('pemda/entry/get-data-entry/'.$id)}}">
 <input type="hidden" id="submitURL" value="{{url('pemda/entry/'.$id)}}">
 
-<table class="table table-bordered table-hover">
+<table class="table table-bordered table-hover" v-if="sinkronisasi">
     <thead>
         <tr>
             <th class="col-md-3">Parameter</th>
@@ -169,25 +158,24 @@ var app = new Vue({
     <tbody>
         <tr>
             <td>Jenis DAK</td>
-            <td>@{{sinkronisasi.jenis}}</td>
+            <td>
+                <span v-if="sinkronisasi">@{{sinkronisasi.jenis}}</span>
+            </td>
         </tr>
         <tr>
             <td>Bidang</td>
-            <td>@{{sinkronisasi.kegiatan.subbidang.bidang.nama}}</td>
+            <td>
+                <span v-if="sinkronisasi.kegiatan.subbidang.bidang.nama">@{{sinkronisasi.kegiatan.subbidang.bidang.nama}}</span>
+            </td>
         </tr>
         <tr>
-                <td>Sub-Bidang</td>
-                <td>@{{sinkronisasi.kegiatan.subbidang.nama}}</td>
-            </tr>
+            <td>Sub-Bidang</td>
+            <td><span v-if="sinkronisasi.kegiatan.subbidang.nama">@{{sinkronisasi.kegiatan.subbidang.nama}}</span></td>
+        </tr>
 
         <tr>
             <td>Output</td>
             <td>@{{sinkronisasi.output}}</td>
-        </tr>
-
-        <tr>
-            <td>Prioritas Kegiatan</td>
-            <td>##</td>
         </tr>
     </tbody>
 </table>
@@ -206,42 +194,44 @@ var app = new Vue({
             <td>Prioritas Kegiatan</td>
             <td>N/A</td>
             <td>
-                <input type="text" class="form-control" v-model="pemdadata.prioritas">
+                <input type="text" class="form-control" v-model="sinkronisasi.pemdadata.prioritas">
             </td>
         </tr>
         <tr>
             <td>Volume</td>
-            <td>@{{kldata.volume}}</td>
             <td>
-                <input type="text" class="form-control" v-model="pemdadata.volume">
+                <label>@{{sinkronisasi.kldata.volume}}</label>
+            </td>
+            <td>
+                <input type="text" class="form-control" v-model="sinkronisasi.pemdadata.volume">
             </td>
         </tr>
         <tr>
             <td>Satuan</td>
-            <td>@{{kldata.satuan}}</td>
+            <td>@{{sinkronisasi.kldata.satuan}}</td>
             <td>
-                <input type="text" class="form-control" v-model="pemdadata.satuan">
+                <input type="text" class="form-control" v-model="sinkronisasi.pemdadata.satuan">
             </td>
         </tr>
         <tr>
             <td>Unit Cost</td>
-            <td>@{{kldata.unit_cost}}</td>
+            <td>@{{sinkronisasi.kldata.unit_cost}}</td>
             <td>
-                <input type="text" class="form-control" v-model="pemdadata.unit_cost">
+                <input type="text" class="form-control" v-model="sinkronisasi.pemdadata.unit_cost">
             </td>
         </tr>
         <tr>
             <td>Kebutuhan Dana</td>
-            <td>xxxx</td>
+            <td>N/A</td>
             <td>
                 <input type="text" class="form-control" v-model="dana">
             </td>
         </tr>
         <tr>
             <td>Target Pencapaian</td>
-            <td>@{{kldata.target}}</td>
+            <td>@{{sinkronisasi.kldata.target}}</td>
             <td>
-                <textarea name="" id="input" class="form-control" rows="3" v-model="pemdadata.target"></textarea>
+                <textarea name="" id="input" class="form-control" rows="3" v-model="sinkronisasi.pemdadata.target"></textarea>
             </td>
         </tr>
         <tr>
