@@ -17,12 +17,12 @@ class DocumentController extends Controller
      */
     public function index()
     {
-        // $pemda_id = 1;
-        // $sinkronisasis = Sinkronisasi::where('pemda_id', $pemda_id)->get();
 
-        // return $sinkronisasis;
+        $documents = \App\Document::with('subbidang')
+            ->where('is_processed', false)
+            ->get();
 
-        return view('djpk.document.index');
+        return view('djpk.document.index', compact('documents'));
     }
 
     public function listKegiatan(Request $request, $id)

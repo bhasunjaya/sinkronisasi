@@ -80,12 +80,33 @@ $(document).ready(function() {
 
     </div>
     <div class="col-sm-6">
-        <div class="panel panel-default">
+        <div class="panel panel-info">
+            <div class="panel-heading"><strong>Anda Bisa Mendowload Format File excel disini</strong></div>
             <div class="panel-body">
-                <p>Anda Bisa Mendowload Format File excel disini</p>
                 <a href="{{url('djpk/document/download')}}" type="button" class="btn btn-info">Download Template</a>
             </div>
         </div>
+
+        @if($documents)
+        <div class="panel panel-warning">
+            <div class="panel-heading"><strong>Dokumen yang belum terproses</strong></div>
+            <table class="table table-hover table-striped table-bordered table-condensed">
+
+                <tbody>
+                    @foreach($documents as $doc)
+                    <tr>
+                        <td>
+                            <p>
+                            <strong>{{$doc->subbidang->bidang->nama}} / {{$doc->subbidang->nama}}</strong>
+                            <br><small>{{$doc->nama}}</small>
+                            </p>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        @endif
     </div>
 </div>
 @endsection
