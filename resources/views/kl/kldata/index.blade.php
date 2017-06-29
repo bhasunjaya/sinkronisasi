@@ -42,6 +42,43 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 </div>
+
+@if($kldatas)
+
+<div class="table-responsive">
+    <table class="table table-hover table-condensed" id="">
+        <thead>
+            <tr>
+                <th class="hidden">id</th>
+                <th class="col-md-2">Jenis</th>
+                <th class="col-md-2">Bidang</th>
+                <th class="col-md-4">Kegiatan</th>
+                <th class="col-md-2">Status Entry</th>
+                <th>Pilihan</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($kldatas as $row)
+            <tr id="data-row-{{$row->id}}">
+                <td class="hidden">{{$row->id}}</td>
+                <td class="">{{$row->jenis}}</td>
+                <td class="">{{$row->kegiatan->subbidang->bidang->nama}}</td>
+                <td class="">{{$row->kegiatan->kegiatan}}</td>
+                <td class="v-align-middle">
+                    @if($row->is_entry_pemda)
+                    <a href="{{url('pemda/entry/'.$row->id)}}">Rubah Data</a>
+                    @else
+                    <a href="{{url('pemda/entry/'.$row->id)}}">Input Data</a>
+                    @endif
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
+@endif
+
+
 @endsection
 <!-- -->
 

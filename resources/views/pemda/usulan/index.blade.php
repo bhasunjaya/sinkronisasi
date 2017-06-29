@@ -1,7 +1,7 @@
 @extends('app')
 <!-- -->
 @push('styles')
-<link rel="stylesheet" media="screen" href="{{asset('b3/js/handsontable/handsontable.full.min.css')}}">
+<link rel="stylesheet" media="screen" href="{{asset('flat/js/handsontable/handsontable.full.min.css')}}">
 <style type="text/css">
 #tabledata {
     width: 100%;
@@ -31,8 +31,8 @@
 <!-- -->
 
 @push('scripts')
-<script src="{{asset('b3/js/handsontable/handsontable.full.min.js')}}"></script>
-<script src="{{asset('b3/js/pemda-usulan.js')}}"></script>
+<script src="{{asset('flat/js/handsontable/handsontable.full.min.js')}}"></script>
+<script src="{{asset('flat/js/pemda-usulan.js')}}"></script>
 @endpush
 <!-- -->
 
@@ -40,8 +40,6 @@
 <!-- -->
 
 @section('content')
-
-
-        <div id="tabledata"></div>
+    <div id="tabledata"></div>
 @endsection
 <!-- -->

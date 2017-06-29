@@ -8,8 +8,32 @@
 
 - Akun User
 
+pemda_id = 1
+bidang_id = 6  Kelautan dan Perikanan
+subbidang_id = 6 - 
+kegiatan_id 43 Pembangunan/Rehabilitasi Sarana dan Prasarana Pokok Unit Perbenihan (UPTD Provinsi);
+jenis = reguler
 
 
+
+### ini untuk bikin sinkronisasi data
+```
+$usulans = \App\Usulan::select(\DB::raw('pemda_id,bidang_id,subbidang_id,kegiatan_id,jenis,satuan,sum(output) as output,sum(dana) as dana'))
+            ->groupBy('pemda_id', 'bidang_id', 'subbidang_id', 'kegiatan_id', 'jenis', 'satuan')
+            ->get();
+        Excel::create('usulans', function ($excel) use ($usulans) {
+            $excel->sheet('Sheet 1', function ($sheet) use ($usulans) {
+                $sheet->fromArray($usulans);
+            });
+        })->export('csv');
+        die;
+```
+
+
+
+### How to test
+1. create sinkronisasi via artisan
+2. Upload DJPK
 
 
 

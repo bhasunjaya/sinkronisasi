@@ -1,268 +1,113 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    {{-- http://pages.revox.io/dashboard/latest/html/widget.html --}}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/favicon.ico">
+    <title>Starter Template for Bootstrap</title>
 
-    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-    <meta charset="utf-8" />
+    <link href="{{asset('flat/css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{asset('flat/css/ie10-viewport-bug-workaround.css')}}" rel="stylesheet">
 
-    <title>Pages - Admin Dashboard UI Kit - Blank Page</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no" />
-    <link rel="apple-touch-icon" href="pages/ico/60.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="pages/ico/76.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="pages/ico/120.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="pages/ico/152.png">
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-touch-fullscreen" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta content="" name="description" />
-    <meta content="" name="author" />
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <link href="{{asset('b3/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
-    <link class="main-stylesheet" href="{{asset('b3/css/jquery.scrollbar.css')}}" rel="stylesheet" type="text/css" />
-    <link href="{{asset('b3/css/font-awesome.min.css')}}" rel="stylesheet" type="text/css" /> {{--
-    <link href="assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen" /> --}} {{--
-    <link href="assets/plugins/switchery/css/switchery.min.css" rel="stylesheet" type="text/css" media="screen" /> --}}
-    <link href="{{asset('b3/css/pages-icons.css')}}" rel="stylesheet" type="text/css">
-    <link class="main-stylesheet" href="{{asset('b3/css/pages.css')}}" rel="stylesheet" type="text/css" /> @stack('styles')
-
-    <!--[if lte IE 9]>
-    <link href="assets/plugins/codrops-dialogFx/dialog.ie.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="{{asset('flat/css/starter-template.css')}}" rel="stylesheet">
+    <link href="{{asset('flat/css/font.css')}}" rel="stylesheet"> @stack('styles')
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
 
-<body class="fixed-header ">
-    <nav class="page-sidebar" data-pages="sidebar">
-        <div class="sidebar-header">
-            <img src="{{asset('b3/img/logo_white.png')}}" alt="logo" class="brand" data-src="{{asset('b3/img/logo_white.png')}}" data-src-retina="{{asset('b3/img/logo_white_2x.png')}}" width="78" height="22">
-            <div class="sidebar-header-controls">
-                <button type="button" class="btn btn-xs sidebar-slide-toggle btn-link m-l-20" data-pages-toggle="#appMenu">
-                    <i class="fa fa-angle-down fs-16"></i></button>
-                <button type="button" class="btn btn-link visible-lg-inline" data-toggle-pin="sidebar"><i class="fa fs-12"></i>
+<body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
                 </button>
+                <a class="navbar-brand" href="#">Project name</a>
             </div>
-        </div>
-        <div class="sidebar-menu">
-            <ul class="menu-items">
-                <li class="m-t-30 ">
-                    <a href="index.html" class="detailed">
-                        <span class="title">Dashboard</span>
-                        <span class="details">12 New Updates</span>
-                    </a>
-                    <span class="bg-success icon-thumbnail"><i class="pg-home"></i></span>
-                </li>
-                <li class="{{prefixActive('/djpk')}}">
-                    <a href="javascript:;" class="detailed">
-                        <span class="title">DJPK</span>
-                        <span class="details">admin</span>
-                    </a>
-                    <span class="icon-thumbnail">M</span>
-                    <ul class="sub-menu">
-                        <li class="">
-                            <a href="{{url('/djpk/bidang')}}">Bidang DAK</a>
-                            <span class="icon-thumbnail">b</span>
-                        </li>
-                        <li class="">
-                            <a href="{{url('/djpk/subbidang')}}">Sub Bidang</a>
-                            <span class="icon-thumbnail">sb</span>
-                        </li>
-                        <li class="">
-                            <a href="{{url('/djpk/pemda')}}">Pemda</a>
-                            <span class="icon-thumbnail">p</span>
-                        </li>
-                        <li class="">
-                            <a href="{{url('/djpk/bappenas')}}">Bappenas</a>
-                            <span class="icon-thumbnail">b</span>
-                        </li>
-                        <li class="">
-                            <a href="{{url('/djpk/kl')}}">K/L Teknis</a>
-                            <span class="icon-thumbnail">kl</span>
-                        </li>
-                        <li class="">
-                            <a href="{{url('/djpk/dinas')}}">Dinas</a>
-                            <span class="icon-thumbnail">kl</span>
-                        </li>
-                        <li class="">
-                            <a href="{{url('/djpk/user')}}">User Account</a>
-                            <span class="icon-thumbnail">u</span>
-                        </li>
-                        <li class="">
-                            <a href="{{url('/djpk/document')}}">Upload Excell</a>
-                            <span class="icon-thumbnail">u</span>
-                        </li>
-                    </ul>
-                </li>
-                <li class="{{prefixActive('/pemda')}}">
-                    <a href="javascript:;" class="detailed">
-                        <span class="title">Pemda</span>
-                        <span class="details">Kab. Kep. Siau Tagulandang Biaro</span>
-                    </a>
-                    <span class="icon-thumbnail">P</span>
-                    <ul class="sub-menu">
-                        <li class="">
-                            <a href="{{url('/pemda/usulan')}}">Data Usulan</a>
-                            <span class="icon-thumbnail">b</span>
-                        </li>
-                        <li class="">
-                            <a href="{{url('/pemda/entry')}}">Entry Data</a>
-                            <span class="icon-thumbnail">b</span>
-                        </li>
-                    </ul>
-                </li>
-                <li class="{{prefixActive('/kl')}}">
-                    <a href="javascript:;" class="detailed">
-                        <span class="title">K/L Teknis</span>
-                        <span class="details">Kementrian Something</span>
-                    </a>
-                    <span class="icon-thumbnail">Kl</span>
-                    <ul class="sub-menu">
-                        <li class="">
-                            <a href="{{url('/kl/kldata')}}">Data K/L</a>
-                            <span class="icon-thumbnail">b</span>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-            <div class="clearfix"></div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="{{url('/')}}">Home</a></li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">DJPK <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{url('/djpk/user')}}">User</a></li>
+                            <li><a href="{{url('/djpk/bappenas')}}">Bappenas</a></li>
+                            <li><a href="{{url('/djpk/bidang')}}">Bidang</a></li>
+                            <li><a href="{{url('/djpk/subbidang')}}">Sub-bidang</a></li>
+                            <li><a href="{{url('/djpk/dinas')}}">Dinas</a></li>
+                            <li><a href="{{url('/djpk/kl')}}">K/L Teknis</a></li>
+                            <li><a href="{{url('/djpk/pemda')}}">Subbidang</a></li>
+                            <li><a href="{{url('/djpk/kegiatan')}}">Kegiatan</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{{url('/djpk/document')}}">Upload</a></li>
+                        </ul>
+                    </li>
+                    <!-- end djpk -->
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pemda <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{url('/pemda/entry')}}">Entry Data</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{{url('/pemda/review')}}">Review Data Usulan</a></li>
+                        </ul>
+                    </li>
+                    <!-- end djpk -->
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">K/L <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{url('/kl/kldata')}}">Entry Data</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{{url('/kl/review')}}">Review Data Usulan</a></li>
+                        </ul>
+                    </li>
+                    <!-- end djpk -->
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Bappenas <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{url('/bappenas/verifikasi')}}">Verifikasi Usulan</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="../navbar/">Default</a></li>
+                    <li><a href="../navbar-static-top/">Static top</a></li>
+                    <li class="active"><a href="./">Fixed top <span class="sr-only">(current)</span></a></li>
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
         </div>
     </nav>
-    <div class="page-container ">
-        <div class="header ">
-            <div class="container-fluid relative">
-                <div class="pull-left full-height visible-sm visible-xs">
-                    <div class="header-inner">
-                        <a href="#" class="btn-link toggle-sidebar visible-sm-inline-block visible-xs-inline-block padding-5" data-toggle="sidebar">
-                            <span class="icon-set menu-hambuger"></span>
-                        </a>
-                    </div>
-                </div>
-                <div class="pull-center hidden-md hidden-lg">
-                    <div class="header-inner">
-                        <div class="brand inline">
-                            <img src="{{asset('b3/img/logo.png')}}" alt="logo" data-src="{{asset('b3/img/logo.png')}}" data-src-retina="{{asset('b3/img/logo_2x.png')}}" width="78" height="22">
-                        </div>
-                    </div>
-                </div>
-                <div class="pull-right full-height visible-sm visible-xs">
-                    <div class="header-inner">
-                        <a href="#" class="btn-link visible-sm-inline-block visible-xs-inline-block" data-toggle="quickview" data-toggle-element="#quickview">
-                            <span class="icon-set menu-hambuger-plus"></span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class=" pull-left sm-table hidden-xs hidden-sm">
-                <div class="header-inner">
-                    <div class="brand inline">
-                        <img src="{{asset('b3/img/logo.png')}}" alt="logo" data-src="{{asset('b3/img/logo.png')}}" data-src-retina="{{asset('b3/img/logo_2x.png')}}" width="78" height="22">
-                    </div>
-                </div>
-            </div>
-            <div class=" pull-right">
-                <div class="visible-lg visible-md m-t-10">
-                    <div class="pull-left p-r-10 p-t-10 fs-16 font-heading">
-                        <span class="semi-bold">David</span> <span class="text-master">Nest</span>
-                    </div>
-                    <div class="dropdown pull-right">
-                        <button class="profile-dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="thumbnail-wrapper d32 circular inline m-t-5">
-                                <img src="{{asset('b3/img/avatar.jpg')}}" alt="" data-src="{{asset('b3/img/avatar.jpg')}}" data-src-retina="{{asset('b3/img/avatar.jpg')}}" width="32" height="32">
-                            </span>
-                        </button>
-                        <ul class="dropdown-menu profile-dropdown" role="menu">
-                            <li><a href="#"><i class="pg-settings_small"></i> Settings</a>
-                            </li>
-                            <li><a href="#"><i class="pg-outdent"></i> Feedback</a>
-                            </li>
-                            <li><a href="#"><i class="pg-signals"></i> Help</a>
-                            </li>
-                            <li class="bg-master-lighter">
-                                <a href="#" class="clearfix">
-                                    <span class="pull-left">Logout</span>
-                                    <span class="pull-right"><i class="pg-power"></i></span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="page-content-wrapper ">
-            <div class="content ">
-                <div class="jumbotron" data-pages="parallax">
-                    <div class="container-fluid container-fixed-lg sm-p-l-20 sm-p-r-20">
-                        <div class="inner">
-                            <h1>@yield('pagetitle')</h1>
-                        </div>
-                    </div>
-                </div>
-                <div class="container-fluid container-fixed-lg">
-                    @yield('content')
-                </div>
-            </div>
-            <div class="container-fluid container-fixed-lg footer">
-                <div class="copyright sm-text-center">
-                    <p class="small no-margin pull-left sm-pull-reset">
-                        <span class="hint-text">Copyright &copy; 2014 </span>
-                        <span class="font-montserrat">REVOX</span>.
-                        <span class="hint-text">All rights reserved. </span>
-                        <span class="sm-block"><a href="#" class="m-l-10 m-r-10">Terms of use</a> | <a href="#" class="m-l-10">Privacy Policy</a></span>
-                    </p>
-                    <p class="small no-margin pull-right sm-pull-reset">
-                        <a href="#">Hand-crafted</a> <span class="hint-text">&amp; Made with Love ®</span>
-                    </p>
-                    <div class="clearfix"></div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Modal -->
-    <div class="modal fade slide-up disable-scroll" id="modalSlideUp" tabindex="-1" role="dialog" aria-labelledby="modalSlideUpLabel" aria-hidden="false">
-        <div class="modal-dialog ">
-            <div class="modal-content-wrapper">
-                <div class="modal-content">
-                    <div class="modal-header clearfix">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="pg-close fs-14"></i>
-                        </button>
-                        <h5>Apakah anda Yakin?</h5>
-                        <p> Proses ini tidak dapat diulang</p>
-                    </div>
-                    <div class="modal-body  text-center">
-                        <button type="button" class="btn btn-primary" data-url="" id="confirm-yes">YA</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">batal</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    {{--
-    <script src="assets/plugins/pace/pace.min.js" type="text/javascript"></script> --}}
-    <script src="{{asset('b3/js/jquery-1.11.1.min.js')}}" type="text/javascript"></script>
-    <script src="{{asset('b3/js/modernizr.custom.js')}}" type="text/javascript"></script>
-    {{--
-    <script src="assets/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script> --}}
-    <script src="{{asset('b3/js/bootstrap.min.js')}}" type="text/javascript"></script>
-    {{--
-    <script src="assets/plugins/jquery/jquery-easy.js" type="text/javascript"></script> --}} {{--
-    <script src="assets/plugins/jquery-unveil/jquery.unveil.min.js" type="text/javascript"></script> --}} {{--
-    <script src="assets/plugins/jquery-bez/jquery.bez.min.js"></script> --}} {{--
-    <script src="assets/plugins/jquery-ios-list/jquery.ioslist.min.js" type="text/javascript"></script> --}} {{--
-    <script src="assets/plugins/jquery-actual/jquery.actual.min.js"></script> --}}
-    <script src="{{asset('b3/js/jquery.scrollbar.min.js')}}" type="text/javascript"></script>
-    {{--
-    <script type="text/javascript" src="assets/plugins/select2/js/select2.full.min.js"></script> --}} {{--
-    <script type="text/javascript" src="assets/plugins/classie/classie.js"></script> --}} {{--
-    <script src="assets/plugins/switchery/js/switchery.min.js" type="text/javascript"></script> --}}
-    <script src="{{asset('b3/js/pages.min.js')}}" type="text/javascript"></script>
-    <script src="{{asset('b3/js/scripts.js')}}" type="text/javascript"></script>
+    <div id="app" class="container">
+        @yield('pagetitle')
+        <!-- -->
+        @yield('content')
 
-    @stack('scripts') {{--
-    <script src="assets/js/demo.js" type="text/javascript"></script> --}}
+    </div>
+    <!-- /.container -->
+
+    <script src="{{asset('flat/js/jquery.min.js')}}"></script>
+    <script src="{{asset('flat/js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('flat/js/ie10-viewport-bug-workaround.js')}}"></script>
+
+    @stack('scripts')
+
 </body>
 
 </html>

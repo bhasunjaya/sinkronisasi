@@ -15,7 +15,7 @@ class SubbidangController extends Controller
      */
     public function index()
     {
-        $subbidangs = Subbidang::with('bidang')->orderBy('id')->get();
+        $subbidangs = Subbidang::with('bidang')->orderBy('bidang_id')->get();
         return view('djpk.subbidang.index', compact('subbidangs'));
     }
 
