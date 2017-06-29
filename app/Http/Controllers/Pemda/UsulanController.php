@@ -120,19 +120,19 @@ class UsulanController extends Controller
     public function review(Request $request)
     {
 
-        $bidang['all'] = [6];
-
-        $bidang['reguler'] = [13, 1, 5, 14];
-        $bidang['penugasan'] = [1, 14, 4, 5];
-        $bidang['afirmasi'] = [13, 14, 1];
-        $pemda_id = 1;
+        $dinas_id = getUserDinasFromAuth();
+        $pemda_id = getPemdaIdFromAuth();
+        $bidangs = \DB::table('bidang_dinas')
+            ->where('dinas_id', $dinas_id)
+            ->pluck('bidang_id');
 
         $sinkronisasis = Sinkronisasi::with('kldata', 'pemdadata', 'kegiatan.subbidang.bidang')
-            ->whereIn('bidang_id', $bidang['all'])
+            ->whereIn('bidang_id', $bidangs)
             ->where('pemda_id', $pemda_id)
             ->orderBy('jenis')
             ->orderBy('bidang_id')
             ->get();
+        // return $sinkronisasis;
 
         return view('pemda.usulan.review', compact('sinkronisasis'));
     }

@@ -16,22 +16,11 @@ class EntryController extends Controller
      */
     public function index()
     {
-        //user_id dapet dari auth
-        $user_id = 1628; // Dinas ESDM prov aceh
-        $usergroup = 'pemda';
-
-        $user = \App\User::with('role')->whereId($user_id)->first();
-
-        $userpemda = \DB::table('pemda_user')->where('user_id', $user->id)->first();
+        $dinas_id = getUserDinasFromAuth();
+        $pemda_id = getPemdaIdFromAuth();
         $bidangs = \DB::table('bidang_dinas')
-            ->where('dinas_id', $user->role->object_id)
+            ->where('dinas_id', $dinas_id)
             ->pluck('bidang_id');
-        $pemda_id = $userpemda->pemda_id;
-
-        $auth['user'] = $user;
-        $auth['usergroup'] = $usergroup;
-        $auth['pemda_id'] = $userpemda->pemda_id;
-        $auth['bidangs'] = $bidangs;
 
         $sinkronisasis = Sinkronisasi::with('kldata', 'pemdadata', 'kegiatan.subbidang.bidang')
             ->whereIn('bidang_id', $bidangs)
@@ -39,8 +28,6 @@ class EntryController extends Controller
             ->orderBy('jenis')
             ->orderBy('bidang_id')
             ->get();
-        // return $sinkronisasis;
-
         return view('pemda.entry.index', compact('sinkronisasis'));
     }
 

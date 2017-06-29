@@ -56,3 +56,7 @@ Route::group(['prefix' => 'bappenas', 'namespace' => 'Bappenas'], function () {
     Route::get('review', 'BappenasController@review');
     Route::get('sinkronisasi/{sinkronisasi_id}', 'BappenasController@sinkronisasi');
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

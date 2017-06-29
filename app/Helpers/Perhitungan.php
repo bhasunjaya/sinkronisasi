@@ -9,6 +9,7 @@ function renderLokasiFromPemdaData($row)
 {
     $input = json_decode($row);
     if ($input) {
+        dd($input);
         $str = '<ol class="list-unstyled">';
         foreach ($input as $l) {
             $str .= '<li>[' . $l->prioritas . '] ' . $l->lokasi . '</li>';

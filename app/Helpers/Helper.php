@@ -1,4 +1,10 @@
 <?php
+/**
+ * Menampilkan angka dengan format indonesia
+ *
+ * @param  float/numeric number
+ * @return string
+ */
 function angka($number)
 {
     $number = $number + 0;
@@ -9,6 +15,40 @@ function angka($number)
     }
 
 }
+
+/**
+ * Mencari pemda_id dari user yang login
+ *
+ * @return integer
+ */
+function getPemdaIdFromAuth()
+{
+    $userpemda = \DB::table('pemda_user')->where('user_id', Auth::id())->first();
+    return object_get($userpemda, 'pemda_id', false);
+}
+
+function getUserDinasFromAuth()
+{
+    return Auth::user()->role->object_id;
+}
+
+function getFlagSinkronisasi($sinkronisasi)
+{
+    if ($sinkronisasi->pemdadata) {
+        return $sinkronisasi->is_flag_bappenas || $sinkronisasi->is_flag_kl ?
+        '<span class="label label-danger">butuh diskusi</span>' :
+        ' <span class="label label-success">confirmed</span>';
+    }
+
+}
+
+function getUserBidang()
+{
+    \DB::table('bidang_dinas')
+        ->where('dinas_id', $dinas_id)
+        ->pluck('bidang_id');
+}
+
 function getTipeTotal($o, $m)
 {
     $total = 0;
