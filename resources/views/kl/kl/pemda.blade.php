@@ -6,88 +6,67 @@
 <link rel="stylesheet" type="text/css" href="{{asset('flat/css/dataTables.bootstrap.min.css')}}">
 
 <style type="text/css">
-/*
-#tabledata td {
+
+#datatables td {
     min-width: 100px;
 }
-
-table#tabledata thead {
-    border-top: none;
-    border-bottom: none;
-    background-color: #FFF;
-}
-
-.table-responsive {
-    height: 400px !important;
-    overflow: scroll;
-}*/
 </style>
 @endpush
 <!-- -->
 
 @section('pagetitle')
-<div class="row">
-    <div class="col-md-8">
-        <h2 class="page-header">Review: {{$pemda->nama}}</h2>
-    </div>
-    <div class="col-md-4">
-        <div class="text-right">
-            <div class="form-group">
-                <label>Pilih Provinsi</label>
-                <select class="form-control">
-                    <option>asdad</option>
-                </select>
-            </div>
-
-        </div>
-    </div>
-</div>
-@endsection
+<h3 class="page-header">Verifikasi: {{$pemda->nama}}</h3>
 <!-- -->
+@endsection
 
+<!-- -->
 @section('content')
 <div class="panel panel-default">
     <div class="panel-heading"><strong>Pilih Pemda</strong></div>
     <div class="panel-body">
+        {!! Form::open(['url'=>'kl/pemda']) !!}
         <div class="form-group">
-            <select class="form-control">
-                <option>asdad</option>
-            </select>
+            <label for="">Pilih Daerah</label>
+            {!! Form::select(
+            'pemda_id',
+            \App\Pemda::pluck('nama','id'),
+            old('pemda_id',$pemda->id),
+            ['class'=>'form-control s2']
+
+            )!!}
         </div>
+        <button type="submit" class="btn btn-primary">Tampilkan Data</button>
+        {!! Form::close() !!}
     </div>
 </div>
 
 <!-- <div class="table-responsive"> -->
 <table class="table table-hover table-bordered table-condensed" id="datatables">
-    <thead>
+   <thead>
         <tr>
             <th>&nbsp;</th>
             <th>&nbsp;</th>
-            <th>&nbsp;</th>
-            <th>&nbsp;</th>
-            <th colspan="4">&nbsp;</th>
-            <th colspan="3">DATA AWAL</th>
+            <th colspan="4">DATA AWAL</th>
+            <th colspan="3">DATA K/L</th>
             <th colspan="4">ENTRY INPUT PEMDA</th>
         </tr>
         <tr>
             <th>Pilihan</th>
             <th>Status</th>
-            <th>Status</th>
-            <th>Status</th>
-            <th style="width: 100px">Jenis</th>
+            <th>Jenis</th>
             <th style="min-width: 450px">Kegiatan</th>
 
-            <th style="width: 100px">Output</th>
-            <th style="width: 100px">Dana</th>
+            <th >Output</th>
+            <th >Dana</th>
 
-            <th style="width: 100px">Output</th>
-            <th style="min-width: 400px">Target</th>
-            <th style="min-width: 400px">Lokasi</th>
+            <th>Output</th>
+            <th>Target</th>
+            <th>Lokasi</th>
 
-            <th style="width: 100px">Output</th>
-            <th style="width: 100px">Kebutuhan Dana</th>
-            <th style="min-width: 400px">Target</th>
-            <th style="min-width: 400px">Lokasi</th>
+            <th>Output</th>
+            <th>Kebutuhan Dana</th>
+            <th>Target</th>
+            <th>Lokasi</th>
 
         </tr>
     </thead>
@@ -98,14 +77,10 @@ table#tabledata thead {
             <td class="v-align-middle">
                 <a href="{{url('kl/sinkronisasi/'.$row->id)}}">detail</a>
             </td>
-            <td>output</td>
-            <td>lokasi</td>
 
-            <td class="">
-                <span class="label label-danger">butuh diskusi</span>
-            </td>
+            <td>{!! getFlagSinkronisasi($row) !!}</td>
             <td class="">{{$row->jenis}}</td>
-            <td class="">
+            <td  style="width: 400px">
                 <strong>{{$row->kegiatan->subbidang->bidang->nama}} / {{$row->kegiatan->subbidang->nama}}</strong>
                 <p>{{$row->kegiatan->kegiatan}}</p>
             </td>
@@ -134,7 +109,7 @@ table#tabledata thead {
 <script type="text/javascript">
 $(document).ready(function() {
     $('#datatables').DataTable({
-        "scrollY": 500,
+        "scrollY": 350,
         "scrollX": true,
         "paging": false
     });

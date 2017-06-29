@@ -15,7 +15,7 @@
         <div class="panel panel-default">
             <div class="panel-heading"><strong>Filter Data</strong></div>
             <div class="panel-body">
-                {!! Form::open(['url'=>'bappenas/pemda']) !!}
+                {!! Form::open(['url'=>'kl/pemda']) !!}
                 <div class="form-group">
                     <label for="">Pilih Daerah</label>
                     <select class="form-control s2" name="pemda_id">
@@ -24,7 +24,7 @@
                         @endforeach
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Tampilkan Data</button>
                 {!! Form::close() !!}
             </div>
         </div>

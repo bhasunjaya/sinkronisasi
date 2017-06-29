@@ -2,7 +2,8 @@
 <!-- -->
 @push('styles') @endpush
 <!-- -->
-@section('pagetitle') @endsection
+@section('pagetitle')
+<h3 class="page-header">Detail Verifikasi</h3> @endsection
 <!-- -->
 @section('content')
 <div class="row">
@@ -33,11 +34,6 @@
                     <td>Output</td>
                     <td>{{$sinkronisasi->output}}</td>
                 </tr>
-
-                <tr>
-                    <td>Prioritas Kegiatan</td>
-                    <td>{{$sinkronisasi->output}}</td>
-                </tr>
                 <tr>
                     <td>Prioritas Kegiatan</td>
                     <td>{{object_get($sinkronisasi,'pemdadata.prioritas')}}</td>
@@ -54,22 +50,30 @@
         </table>
     </div>
     <div class="col-md-6">
+        @if(session('message'))
+        <div class="alert alert-success">
+            <strong>{{session('message')}}</strong>
+        </div>
+        @endif
         <div class="panel panel-default">
             <div class="panel-body">
-                <form action="" method="POST" role="form">
-                    <legend>Input Review Data Usulan</legend>
+                {!! Form::open(['url'=>'kl/confirm'])!!}
+                {!! Form::hidden('sinkronisasi_id',$sinkronisasi->id) !!}
+                <legend>Input Review Data Usulan</legend>
+                <div class="form-group">
+                    <label for="">Flag Output</label>
+                    {!! Form::select('flag',[ "0"=>'Konfirm',"1"=>"Butuh Diskusi"],old('flag',$sinkronisasi->is_flag_kl),['class'=>'form-control']
+                    ) !!}
+                </div>
+                <div class="form-group">
+                    <label for="">Catatan</label>
+                    {!! Form::textarea('note',old('note',$sinkronisasi->kl_note),['class'=>'form-control','rows'=>3])!!}
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
 
-                    <div class="form-group">
-                        <label for="">Flag Output</label>
-                        <input type="text" class="form-control" id="" placeholder="Input field">
-                    </div>
-                    <div class="form-group">
-                        <label for="">Catatan</label>
-                        <textarea class="form-control" rows="3"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                    <a href="{{url('kl/pemda/'.$sinkronisasi->pemda_id)}}" class="btn btn-link">Kembali Ke Data Review</a>
-                </form>
+                <a href="{{url('kl/pemda?pemda_id='.$sinkronisasi->pemda_id)}}" class="btn btn-link">Kembali Ke Data
+                    Review</a>
+                {!! Form::close() !!}
             </div>
         </div>
     </div>
@@ -130,4 +134,12 @@
 
 @endsection
 <!-- -->
-@push('scripts') @endpush
+@push('scripts')
+<script type="text/javascript">
+$(function() {
+    $("#doSubmit").on('click', function(e) {
+        e.preventDefault();
+    })
+})
+</script>
+@endpush

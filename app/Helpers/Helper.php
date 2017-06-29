@@ -34,12 +34,25 @@ function getUserDinasFromAuth()
 
 function getFlagSinkronisasi($sinkronisasi)
 {
-    if ($sinkronisasi->pemdadata) {
-        return $sinkronisasi->is_flag_bappenas || $sinkronisasi->is_flag_kl ?
-        '<span class="label label-danger">butuh diskusi</span>' :
-        ' <span class="label label-success">confirmed</span>';
+    if ($sinkronisasi->is_flag_bappenas === null && $sinkronisasi->is_flag_kl == null) {
+        return '';
+    } elseif ($sinkronisasi->is_flag_bappenas || $sinkronisasi->is_flag_kl) {
+        return '<span class="label label-danger">butuh diskusi</span>';
+    } else {
+
+        return '<span class="label label-success">Confirmed</span>';
     }
 
+}
+
+// function getStatusSinkronisasi($sinkronisasi)
+// {
+//     if($sinkronisasi->is_flag_kl || $sinkronisasi->is_flag_bappenas)
+// }
+
+function getBidangKFromAuthl()
+{
+    return Auth::user()->role();
 }
 
 function getUserBidang()
