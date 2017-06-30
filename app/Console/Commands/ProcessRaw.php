@@ -2,8 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Kldata;
+use App\Pemdadata;
 use App\Sinkronisasi;
-use Excel;
 use Illuminate\Console\Command;
 
 class ProcessRaw extends Command
@@ -39,28 +40,54 @@ class ProcessRaw extends Command
      */
     public function handle()
     {
+        Kldata::truncate();
+        Pemdadata::truncate();
+        // dd(rand(1, 5));
+        $sinkronisasi = Sinkronisasi::where('pemda_id', 1)->get();
+        foreach ($sinkronisasi as $s) {
+            $kldata = new Kldata;
+            $kldata->sinkronisasi_id = $s->id;
+            $kldata->pemda_id = $s->pemda_id;
+            $kldata->bidang_id = $s->bidang_id;
+            $kldata->subbidang_id = $s->subbidang_id;
+            $kldata->kegiatan_id = $s->kegiatan_id;
+            $kldata->jenis = $s->jenis;
+            $kldata->volume = $s->output ?: 0;
+            $kldata->satuan = $s->satuan;
+            $kldata->unit_cost = $s->unit_cost;
+            $kldata->target = $s->target;
+            $kldata->lokasi = $s->lokasi;
+            $kldata->is_entry_pemda = 1;
+            $kldata->save();
 
-        $usulans = \App\Usulan::where('pemda_id', 1)
-            ->select(\DB::raw('pemda_id,bidang_id,subbidang_id,kegiatan_id,jenis,satuan,sum(output) as output,sum(dana) as dana'))
-            ->groupBy('pemda_id', 'bidang_id', 'subbidang_id', 'kegiatan_id', 'jenis', 'satuan')
-            ->get();
-        Excel::create('usulans', function ($excel) use ($usulans) {
-            $excel->sheet('Sheet 1', function ($sheet) use ($usulans) {
-                $sheet->fromArray($usulans);
-            });
-        })->export('xls');
-        die;
-        foreach ($usulans as $r) {
-            $sinkronisasi = new Sinkronisasi;
-            $sinkronisasi->pemda_id = $r->pemda_id;
-            $sinkronisasi->bidang_id = $r->bidang_id;
-            $sinkronisasi->subbidang_id = $r->subbidang_id;
-            $sinkronisasi->kegiatan_id = $r->kegiatan_id;
-            $sinkronisasi->jenis = $r->jenis;
-            $sinkronisasi->satuan = $r->satuan;
-            $sinkronisasi->output = $r->output;
-            $sinkronisasi->dana = $r->dana;
-            $sinkronisasi->save();
+            $lokasis = explode(";", $s->lokasi);
+            $count = 1;
+            $jlokasi = [];
+            foreach ($lokasis as $l) {
+                if ($l) {
+
+                    $ins = [];
+                    $ins['lokasi'] = $l;
+                    $ins['prioritas'] = $count;
+                    $jlokasi[] = $ins;
+                    $count++;
+                }
+            }
+
+            $pemdadata = new Pemdadata;
+            $pemdadata->prioritas = rand(1, 5);
+            $pemdadata->sinkronisasi_id = $s->id;
+            $pemdadata->pemda_id = $s->pemda_id;
+            $pemdadata->bidang_id = $s->bidang_id;
+            $pemdadata->subbidang_id = $s->subbidang_id;
+            $pemdadata->kegiatan_id = $s->kegiatan_id;
+            $pemdadata->jenis = $s->jenis;
+            $pemdadata->volume = $s->output ?: 0;
+            $pemdadata->satuan = $s->satuan;
+            $pemdadata->unit_cost = $s->unit_cost;
+            $pemdadata->target = $s->target;
+            $pemdadata->lokasi = json_encode($jlokasi);
+            $pemdadata->save();
 
         }
     }

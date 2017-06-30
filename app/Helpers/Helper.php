@@ -1,9 +1,65 @@
 <?php
-function prefixActive($prefix, $output = 'open active')
+/**
+ * Menampilkan angka dengan format indonesia
+ *
+ * @param  float/numeric number
+ * @return string
+ */
+function angka($number)
 {
-    if (Route::getCurrentRoute()->getPrefix() == $prefix) {
-        return $output;
+    $number = $number + 0;
+    if (strpos($number, '.')) {
+        return number_format($number, 2, ',', '.');
+    } else {
+        return number_format($number, 0, ',', '.');
     }
+
+}
+
+/**
+ * Mencari pemda_id dari user yang login
+ *
+ * @return integer
+ */
+function getPemdaIdFromAuth()
+{
+    $userpemda = \DB::table('pemda_user')->where('user_id', Auth::id())->first();
+    return object_get($userpemda, 'pemda_id', false);
+}
+
+function getUserDinasFromAuth()
+{
+    return Auth::user()->role->object_id;
+}
+
+function getFlagSinkronisasi($sinkronisasi)
+{
+    if ($sinkronisasi->is_flag_bappenas === null && $sinkronisasi->is_flag_kl == null) {
+        return '';
+    } elseif ($sinkronisasi->is_flag_bappenas || $sinkronisasi->is_flag_kl) {
+        return '<span class="label label-danger">butuh diskusi</span>';
+    } else {
+
+        return '<span class="label label-success">Confirmed</span>';
+    }
+
+}
+
+// function getStatusSinkronisasi($sinkronisasi)
+// {
+//     if($sinkronisasi->is_flag_kl || $sinkronisasi->is_flag_bappenas)
+// }
+
+function getBidangKFromAuthl()
+{
+    return Auth::user()->role();
+}
+
+function getUserBidang()
+{
+    \DB::table('bidang_dinas')
+        ->where('dinas_id', $dinas_id)
+        ->pluck('bidang_id');
 }
 
 function getTipeTotal($o, $m)

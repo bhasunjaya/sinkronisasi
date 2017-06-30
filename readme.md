@@ -18,6 +18,8 @@ jenis = reguler
 
 ### ini untuk bikin sinkronisasi data
 ```
+//pemda_id,bidang_id,subbidang_id,kegiatan_id,jenis,satuan,output,dana
+
 $usulans = \App\Usulan::select(\DB::raw('pemda_id,bidang_id,subbidang_id,kegiatan_id,jenis,satuan,sum(output) as output,sum(dana) as dana'))
             ->groupBy('pemda_id', 'bidang_id', 'subbidang_id', 'kegiatan_id', 'jenis', 'satuan')
             ->get();

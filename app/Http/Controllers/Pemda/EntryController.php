@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Pemda;
 
 use App\Http\Controllers\Controller;
-use App\Kldata;
 use App\Pemdadata;
 use App\Sinkronisasi;
 use Illuminate\Http\Request;
@@ -17,22 +16,18 @@ class EntryController extends Controller
      */
     public function index()
     {
-
-        $bidang['all'] = [6];
-
-        $bidang['reguler'] = [13, 1, 5, 14];
-        $bidang['penugasan'] = [1, 14, 4, 5];
-        $bidang['afirmasi'] = [13, 14, 1];
-        $pemda_id = 1;
+        $dinas_id = getUserDinasFromAuth();
+        $pemda_id = getPemdaIdFromAuth();
+        $bidangs = \DB::table('bidang_dinas')
+            ->where('dinas_id', $dinas_id)
+            ->pluck('bidang_id');
 
         $sinkronisasis = Sinkronisasi::with('kldata', 'pemdadata', 'kegiatan.subbidang.bidang')
-            ->whereIn('bidang_id', $bidang['all'])
+            ->whereIn('bidang_id', $bidangs)
             ->where('pemda_id', $pemda_id)
             ->orderBy('jenis')
             ->orderBy('bidang_id')
             ->get();
-        // return $sinkronisasis;
-
         return view('pemda.entry.index', compact('sinkronisasis'));
     }
 
@@ -153,23 +148,10 @@ class EntryController extends Controller
 
     public function getDataEntry($id)
     {
-        $sinkronisasi = Sinkronisasi::with('kegiatan.subbidang.bidang')
+        $sinkronisasi = Sinkronisasi::with('kegiatan.subbidang.bidang', 'kldata', 'pemdadata')
             ->where('id', $id)
             ->first();
 
-        $kldata = Kldata::where('pemda_id', $sinkronisasi->pemda_id)
-            ->where('bidang_id', $sinkronisasi->bidang_id)
-            ->where('kegiatan_id', $sinkronisasi->kegiatan_id)
-            ->where('subbidang_id', $sinkronisasi->subbidang_id)
-            ->where('jenis', $sinkronisasi->jenis)
-            ->first();
-
-        $pemdadata = Pemdadata::where('sinkronisasi_id', $sinkronisasi->id)->first();
-
-        return [
-            'sinkronisasi' => $sinkronisasi,
-            'kldata' => $kldata,
-            'pemdadata' => $pemdadata,
-        ];
+        return $sinkronisasi;
     }
 }

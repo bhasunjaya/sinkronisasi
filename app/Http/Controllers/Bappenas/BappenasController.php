@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Bappenas;
 
 use App\Http\Controllers\Controller;
 use App\Sinkronisasi;
+use App\User;
+use Auth;
+use DB;
 use Illuminate\Http\Request;
 
 class BappenasController extends Controller
@@ -22,16 +25,13 @@ class BappenasController extends Controller
     {
 
         $pemda_id = $request->pemda_id;
-        $bidang['all'] = [2];
-        // $bidang['all'] = [13, 1, 5, 4, 14];
-        $bidang['reguler'] = [13, 1, 5, 14];
-        $bidang['penugasan'] = [1, 14, 4, 5];
-        $bidang['afirmasi'] = [13, 14, 1];
+        $kl_id = Auth::user()->role->object_id;
+        $bidangs = DB::table('bidang_kl')->where('kl_id', $kl_id)->pluck('bidang_id');
 
         $pemda = \App\Pemda::find($pemda_id);
         $sinkronisasis = Sinkronisasi::with('kegiatan.subbidang.bidang', 'kldata')
             ->where('pemda_id', $pemda_id)
-            ->whereIn('bidang_id', $bidang['all'])
+            ->whereIn('bidang_id', $bidangs)
             ->get();
 
         return view('bappenas.bappenas.pemda', compact('sinkronisasis', 'pemda'));
@@ -41,5 +41,15 @@ class BappenasController extends Controller
     {
         $sinkronisasi = Sinkronisasi::find($id);
         return view('bappenas.bappenas.sinkronisasi', compact('sinkronisasi'));
+    }
+
+    public function confirm(Request $request)
+    {
+        $sinkronisasi = Sinkronisasi::find($request->sinkronisasi_id);
+        $sinkronisasi->is_flag_bappenas = $request->flag;
+        $sinkronisasi->bappenas_note = $request->note;
+        $sinkronisasi->save();
+        return redirect('bappenas/sinkronisasi/' . $sinkronisasi->id)->withMessage('Data Telah Diupdate');
+
     }
 }

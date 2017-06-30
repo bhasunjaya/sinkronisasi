@@ -61,7 +61,7 @@ class UserSeeder extends Seeder
 
             $uid = \App\User::create($u);
 
-            DB::table('roles')->insert([
+            DB::table('  ')->insert([
                 'user_id' => $uid->id,
                 'object_id' => $kl->id,
             ]);

@@ -29,6 +29,92 @@ class ImportManager extends Command
     protected $rows = 100;
 
     /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
+        $documents = Document::where('is_processed', false)
+            ->limit(20)->get();
+        config([
+            'excel.import.heading' => 'numeric',
+            'excel.import.startRow' => 5,
+        ]);
+        $pemdas = Pemda::all();
+        $listPemda = [];
+        foreach ($pemdas as $p) {
+            $key = sprintf("%02d-%02d", $p->prov, $p->kab);
+            $listPemda[$key] = $p->id;
+        }
+        foreach ($documents as $doc) {
+
+            $ins = [];
+            $bidang = Subbidang::find($doc->subbidang_id);
+            $file_path = storage_path($doc->nama);
+
+            $bidang_id = $bidang->id;
+            $subbidang_id = $doc->subbidang_id;
+            $kegiatan_id = $doc->kegiatan_id;
+            $jenis = $doc->jenis;
+
+            $sinkronisasis = Sinkronisasi::where('subbidang_id', $subbidang_id)
+                ->where('kegiatan_id', $kegiatan_id)
+                ->where('jenis', $jenis)
+                ->select(\DB::raw("id,lower(CONCAT(pemda_id,'-',subbidang_id,'-',kegiatan_id,'-',jenis,'-',satuan)) as kk"))
+                ->get();
+            $oSinkronisasi = [];
+            foreach ($sinkronisasis as $r) {
+                $oSinkronisasi[$r->kk] = $r->id;
+            }
+
+            Excel::filter('chunk')
+                ->selectSheetsByIndex(0)
+                ->load($file_path)
+                ->chunk($this->chunkSize, function ($result) use (&$ins, $oSinkronisasi, $listPemda, $bidang_id, $subbidang_id, $kegiatan_id, $jenis) {
+                    $rows = $result->toArray();
+                    foreach ($rows as $k => $row) {
+                        if ($row[5] && $row[6]) {
+                            $pemdaKey = $row[1] . '-' . $row[2];
+                            $pemda_id = array_get($listPemda, $pemdaKey, false);
+
+                            if ($pemda_id) {
+                                $key = strtolower($pemda_id . '-' . $subbidang_id . '-' . $kegiatan_id . '-' . $jenis . '-' . trim($row[6]));
+
+                                $sinkronisasi_id = array_get($oSinkronisasi, $key, false);
+                                if ($sinkronisasi_id) {
+
+                                    $kldata = Kldata::where('sinkronisasi_id', $sinkronisasi_id)->first();
+                                    if (!$kldata) {
+                                        $kldata = new Kldata;
+                                    }
+
+                                    $kldata->sinkronisasi_id = $sinkronisasi_id;
+                                    $kldata->pemda_id = $pemda_id;
+                                    $kldata->bidang_id = $bidang_id;
+                                    $kldata->subbidang_id = $subbidang_id;
+                                    $kldata->kegiatan_id = $kegiatan_id;
+                                    $kldata->jenis = $jenis;
+                                    $kldata->volume = $row[5];
+                                    $kldata->satuan = $row[6];
+                                    $kldata->unit_cost = $row[7];
+                                    $kldata->target = $row[9];
+                                    $kldata->lokasi = $row[10];
+                                    // print_r($kldata->toArray());
+                                    $kldata->save();
+                                }
+
+                            }
+
+                        }
+                    }
+                });
+            $doc->is_processed = true;
+            $doc->save();
+        }
+    }
+
+    /**
      * Create a new command instance.
      *
      * @return void
@@ -156,88 +242,4 @@ class ImportManager extends Command
 
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
-    public function handle()
-    {
-        $documents = Document::where('is_processed', false)
-            ->limit(20)->get();
-        config([
-            'excel.import.heading' => 'numeric',
-            'excel.import.startRow' => 5,
-        ]);
-        $pemdas = Pemda::all();
-        $listPemda = [];
-        foreach ($pemdas as $p) {
-            $key = sprintf("%02d-%02d", $p->prov, $p->kab);
-            $listPemda[$key] = $p->id;
-        }
-        foreach ($documents as $doc) {
-
-            $ins = [];
-            $bidang = Subbidang::find($doc->subbidang_id);
-            $file_path = storage_path($doc->nama);
-
-            $bidang_id = $bidang->id;
-            $subbidang_id = $doc->subbidang_id;
-            $kegiatan_id = $doc->kegiatan_id;
-            $jenis = $doc->jenis;
-
-            $sinkronisasis = Sinkronisasi::where('subbidang_id', $subbidang_id)
-                ->where('kegiatan_id', $kegiatan_id)
-                ->where('jenis', $jenis)
-                ->select(\DB::raw("id,lower(CONCAT(pemda_id,'-',subbidang_id,'-',kegiatan_id,'-',jenis,'-',satuan)) as kk"))
-                ->get();
-            $oSinkronisasi = [];
-            foreach ($sinkronisasis as $r) {
-                $oSinkronisasi[$r->kk] = $r->id;
-            }
-
-            Excel::filter('chunk')
-                ->selectSheetsByIndex(0)
-                ->load($file_path)
-                ->chunk($this->chunkSize, function ($result) use (&$ins, $oSinkronisasi, $listPemda, $bidang_id, $subbidang_id, $kegiatan_id, $jenis) {
-                    $rows = $result->toArray();
-                    foreach ($rows as $k => $row) {
-                        if ($row[5] && $row[6]) {
-                            $pemdaKey = $row[1] . '-' . $row[2];
-                            $pemda_id = array_get($listPemda, $pemdaKey, false);
-
-                            if ($pemda_id) {
-                                $key = strtolower($pemda_id . '-' . $subbidang_id . '-' . $kegiatan_id . '-' . $jenis . '-' . trim($row[6]));
-
-                                $sinkronisasi_id = array_get($oSinkronisasi, $key, false);
-                                if ($sinkronisasi_id) {
-
-                                    $kldata = Kldata::where('sinkronisasi_id', $sinkronisasi_id)->first();
-                                    if (!$kldata) {
-                                        $kldata = new Kldata;
-                                    }
-
-                                    $kldata->sinkronisasi_id = $sinkronisasi_id;
-                                    $kldata->pemda_id = $pemda_id;
-                                    $kldata->bidang_id = $bidang_id;
-                                    $kldata->subbidang_id = $subbidang_id;
-                                    $kldata->kegiatan_id = $kegiatan_id;
-                                    $kldata->jenis = $jenis;
-                                    $kldata->volume = $row[5];
-                                    $kldata->satuan = $row[6];
-                                    $kldata->unit_cost = $row[7];
-                                    $kldata->target = $row[9];
-                                    $kldata->lokasi = $row[10];
-                                    $kldata->save();
-                                }
-
-                            }
-
-                        }
-                    }
-                });
-            // $doc->is_processed = true;
-            // $doc->save();
-        }
-    }
 }

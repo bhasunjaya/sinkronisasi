@@ -2,7 +2,21 @@
 <!-- -->
 @push('styles') @endpush
 <!-- -->
-@section('pagetitle') @endsection
+@section('pagetitle')
+<div class="row">
+    <div class="col-md-8">
+        <h3 class="page-header">Detail Usulan</h3>
+    </div>
+    <div class="col-md-4">
+    <div class="text-right">
+    <a href="{{url('pemda/review')}}" class="btn btn-link">
+        <i class="glyphicon glyphicon-chevron-left"></i>
+        kembali
+    </a>
+    </div>
+    </div>
+</div>
+@endsection
 <!-- -->
 @section('content')
 <table class="table table-bordered table-hover">
@@ -28,11 +42,6 @@
 
         <tr>
             <td>Output</td>
-            <td>{{$sinkronisasi->output}}</td>
-        </tr>
-
-        <tr>
-            <td>Prioritas Kegiatan</td>
             <td>{{$sinkronisasi->output}}</td>
         </tr>
         <tr>
@@ -90,7 +99,7 @@
             <td>Lokasi</td>
             <td>{!! cetakLokasiKL(object_get($sinkronisasi,'kldata.lokasi')) !!}</td>
             <td>
-            {!! cetakLokasiPemda(object_get($sinkronisasi,'pemdadata.lokasi')) !!}
+                {!! cetakLokasiPemda(object_get($sinkronisasi,'pemdadata.lokasi')) !!}
 
             </td>
         </tr>

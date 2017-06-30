@@ -5,6 +5,21 @@ function hitungKebutuhanDana($v, $u)
     return $v * $u;
 }
 
+function renderLokasiFromPemdaData($row)
+{
+    $input = json_decode($row);
+    if ($input) {
+        dd($input);
+        $str = '<ol class="list-unstyled">';
+        foreach ($input as $l) {
+            $str .= '<li>[' . $l->prioritas . '] ' . $l->lokasi . '</li>';
+        }
+        $str .= "</ol>";
+        return $str;
+    }
+    return '';
+}
+
 function cetakLokasiKL($input)
 {
     if ($input) {
